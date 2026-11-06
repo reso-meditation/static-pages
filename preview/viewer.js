@@ -21,7 +21,7 @@
   };
 
   // ---------- État <-> adresse ----------
-  // Un réglage s'écrit « proposition~palette:charte.fonds:aucune » (choix par défaut omis).
+  // Un réglage s'écrit « proposition~palette:charte.sous-menus:pastel » (choix par défaut omis).
   function encodeSide(s) {
     var c = Object.keys(s.c).filter(function (q) { return s.c[q] !== defaultOption(q); })
       .map(function (q) { return q + ':' + s.c[q]; });

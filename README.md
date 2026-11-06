@@ -51,7 +51,8 @@ l'accueil est découpé en sections, une par catégorie du menu. Une section com
 
 Tous les widgets qui suivent, jusqu'à la section suivante, prennent la couleur de la catégorie :
 liseré gauche des cartes et bande de fond pleine largeur dans une teinte claire de la couleur,
-sur laquelle le titre est à cheval (modèle « Événements & actualité » de la maquette). Un widget
+sur laquelle le titre est à cheval (modèle « Événements & actualité » de la maquette). Les bandes
+s'enchaînent sans espace : chacune descend jusqu'au milieu de la pilule de la section suivante. Un widget
 ajouté dans une section prend donc ses couleurs sans toucher au CSS. Les couleurs et leurs teintes
 sont des variables en tête de la section MENU PRINCIPAL de `custom.css` (`--menu_…`, `--menu_…_fond`). Les sections doivent rester
 dans l'ordre du menu (`--etre-ensemble`, `--evenements`, `--enseignements`, `--pratique`, `--chemin`).
@@ -139,7 +140,7 @@ Proposition, d'une réponse à chaque choix. Par défaut : A = Proposition, B = 
 - **⇄ Basculer** (touche `B`) : échange A et B ; seul, c'est un « avant / après » instantané.
 - **Panneau Choix** : une colonne de boutons par réglage (A, B en mode comparaison).
 - **Copier le résumé** : la liste des choix de A (et B), avec le lien, pour un compte rendu.
-- **Copier le lien** : l'adresse contient tout l'état (`#page=…&a=proposition~palette:charte&b=…`).
+- **Copier le lien** : l'adresse contient tout l'état (`#page=…&a=proposition~palette:charte.sous-menus:pastel&b=…`).
 
 `preview/choix.yaml` décrit les questions et leurs réponses ; la première réponse de chaque
 question est la proposition actuelle (`custom-af-content/`). Une réponse peut :

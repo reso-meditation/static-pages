@@ -1361,7 +1361,7 @@ We apply this to the first green section, so it acts as a header */
 
 /* -- Bureau -- */
 #header .js-scrollable-nav ul.nav > li {
-    padding: 0 2px;
+    padding: 0 6px;   /* 12 px entre les pilules */
 }
 #header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"],
 #header .js-scrollable-nav ul.nav > li > a[href="/agenda"],
@@ -1373,9 +1373,9 @@ We apply this to the first green section, so it acts as a header */
     font-family: 'Oswald', 'Arial Narrow', sans-serif !important;
     font-size: 14px;
     font-weight: 400;
-    letter-spacing: .01em;
+    letter-spacing: 0;
     line-height: 18px;
-    padding: 6px 12px;
+    padding: 6px 10px;
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -1488,7 +1488,9 @@ We apply this to the first green section, so it acts as a header */
     margin-bottom: 48px;
 }
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:has(+ .is-draggable .reso-section)::before {
-    bottom: -32px;   /* la bande s'arrête 16 px au-dessus de la pilule suivante */
+    /* les bandes s'enchaînent : celle-ci descend jusqu'au milieu de la pilule suivante, où commence
+       la bande de la section suivante (48 px d'espace + demi-pilule ; 1 px de recouvrement) */
+    bottom: calc(-48px - var(--reso-pill-h) / 2 - 1px);
 }
 /* Dernier widget de la page : la bande descend jusqu'au pied de page (marge basse du tableau de bord) */
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:last-child::before {

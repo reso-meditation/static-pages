@@ -12,7 +12,7 @@
   var VERSION = params.get('version') === 'production' ? 'production' : 'proposition';
   var PROPOSITION = 'custom-af-content/';
   var CONTENT = VERSION === 'production' ? 'preview/site/production/' : PROPOSITION;
-  // Choix (preview/choix.yaml) retenus, ex. ?choix=palette:charte,fonds:aucune — Proposition seulement.
+  // Choix (preview/choix.yaml) retenus, ex. ?choix=palette:charte,sous-menus:pastel — Proposition seulement.
   var CHOIX = {};
   (params.get('choix') || '').split(',').forEach(function (c) {
     var i = c.indexOf(':');

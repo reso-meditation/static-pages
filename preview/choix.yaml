@@ -36,21 +36,6 @@
       couleurs: ["#551800", "#D70900", "#004680", "#FFD400", "#EBE4E0"]
       css: palette-3.css
 
-- id: fonds
-  question: Fond des sections de l'accueil
-  options:
-    - id: toutes
-      titre: Une bande de couleur par section
-      detail: Le modèle « Événements & actualité » de la maquette, appliqué à chaque section.
-    - id: evenements
-      titre: Seulement Événements & actualité
-      detail: Comme la maquette.
-      css: fonds-evenements.css
-    - id: aucune
-      titre: Aucune bande
-      detail: Les sections ne sont marquées que par leur titre et le liseré des cartes.
-      css: fonds-aucun.css
-
 - id: lisere
   question: Liseré coloré à gauche des cartes
   options:
@@ -61,7 +46,7 @@
       css: sans-lisere.css
 
 - id: sous-menus
-  question: Style des sous-menus (bureau)
+  question: Style des sous-menus
   options:
     - id: alumnforce
       titre: Style AlumnForce actuel
@@ -70,6 +55,10 @@
       titre: Cartes blanches arrondies
       detail: Ombre douce, entrée survolée en jaune clair.
       css: sous-menus-cartes.css
+    - id: pastel
+      titre: Cartes arrondies, fond pastel de la catégorie
+      detail: Même teinte que la bande de la section sur l'accueil (bureau et mobile).
+      css: sous-menus-pastel.css
 
 - id: meditons
   question: Où mettre « Méditons ensemble » ?
