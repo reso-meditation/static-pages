@@ -1,0 +1,17 @@
+# Site statique : pas de compilation, la racine du dépôt est publiée telle quelle.
+[build]
+  publish = "."
+  command = ""
+
+# L'aperçu reproduit l'espace membres (menu, contenus) : pas d'indexation par les moteurs de recherche.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Outils de maintenance : inutiles sur le site publié.
+[[redirects]]
+  from = "/tools/*"
+  to = "/404"
+  status = 404
+  force = true

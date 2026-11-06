@@ -73,7 +73,8 @@ par un avatar neutre.
 ## Mettre en ligne une modification
 
 1. Modifier `pages/<id>.html` et/ou `custom.css`, et vérifier dans l'aperçu.
-2. Commiter, pousser : l'aperçu est publié sur GitHub Pages.
+2. Commiter, pousser : Netlify publie l'aperçu (configuration dans `netlify.toml`).
+   Une pull request donne un aperçu séparé (deploy preview), pour faire relire avant de coller.
 3. Coller le contenu dans AlumnForce (bouton « Copier le HTML » / « Copier custom.css »).
    Dans l'éditeur de texte, passer en mode code (`</>`) avant de coller.
 
