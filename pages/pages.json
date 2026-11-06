@@ -1,0 +1,14 @@
+[
+  {
+    "id": "accueil-membres",
+    "titre": "Accueil membres",
+    "type": "accueil",
+    "url": "https://www.reso.co/"
+  },
+  {
+    "id": "minuteur",
+    "titre": "Minuteur",
+    "type": "page-statique",
+    "url": "https://www.reso.co/page/minuteur"
+  }
+]

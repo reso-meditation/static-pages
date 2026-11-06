@@ -1,0 +1,11 @@
+{
+  "name": "reso-pages-tools",
+  "private": true,
+  "description": "Outils de maintenance de l'aperçu (capture de l'en-tête et du pied de page de reso.co)",
+  "scripts": {
+    "capture": "node capture-site-chrome.js"
+  },
+  "devDependencies": {
+    "playwright-core": "1.56.1"
+  }
+}

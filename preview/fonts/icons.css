@@ -1,0 +1,20 @@
+/* Polices d'icônes du site, rechargées depuis des sources accessibles hors de reso.co (CORS).
+   Mêmes noms de famille que sur le site : ces déclarations remplacent celles d'AlumnForce. */
+
+/* FontAF : icônes AlumnForce (déclarée dans le <head> des pages reso.co) */
+@font-face {
+  font-family: 'FontAF';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('af_font/FontAF.woff') format('woff');
+}
+
+/* Material Design Icons 7.3.67 (même version que main.build.css), licence Apache 2.0 */
+@font-face {
+  font-family: 'Material Design Icons';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/fonts/materialdesignicons-webfont.woff2') format('woff2');
+}

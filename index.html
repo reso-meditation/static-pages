@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pages Reso</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="preview/viewer.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <header class="brand">
+      <strong>Pages Reso</strong>
+      <span>Aperçu des contenus AlumnForce</span>
+    </header>
+    <nav>
+      <ul id="page-list" class="page-list"></ul>
+    </nav>
+    <footer class="sidebar-foot">
+      <button type="button" id="copy-css" class="link-btn">Copier custom.css</button>
+    </footer>
+  </aside>
+
+  <section class="workspace">
+    <div class="toolbar">
+      <div class="title">
+        <h1 id="page-title">…</h1>
+        <span id="page-type" class="tag"></span>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Largeur d'écran" id="widths">
+          <button type="button" data-w="1366">Bureau</button>
+          <button type="button" data-w="1024">Portable</button>
+          <button type="button" data-w="768">Tablette</button>
+          <button type="button" data-w="390">Mobile</button>
+        </div>
+        <button type="button" id="copy-html" class="btn primary">Copier le HTML</button>
+        <a id="open-alone" class="btn" target="_blank">Ouvrir seule</a>
+        <a id="open-live" class="btn" target="_blank" rel="noopener">Voir sur reso.co</a>
+      </div>
+    </div>
+    <div id="warnings" class="warnings" hidden></div>
+    <div id="stage" class="stage">
+      <div id="frame-box" class="frame-box">
+        <iframe id="frame" title="Aperçu de la page"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="preview/viewer.js"></script>
+</body>
+</html>

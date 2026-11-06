@@ -1,0 +1,90 @@
+<!doctype html>
+<!--
+  Rendu d'UNE page dans un contexte qui imite reso.co :
+  mêmes feuilles de style AlumnForce (chargées depuis reso.co), puis custom.css,
+  puis le fragment HTML de pages/<id>.html placé dans les mêmes conteneurs que sur le site.
+  Usage : preview.html?page=<id>
+-->
+<html lang="fr" class="userbar-is-active user-is-login no-touchevents">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aperçu Reso</title>
+  <link rel="icon" href="data:,">
+  <base target="_blank">
+  <!-- Feuilles de style AlumnForce, dans l'ordre du site -->
+  <link rel="stylesheet" href="https://www.reso.co/templates/reso.co/css/main.css">
+  <link rel="stylesheet" href="https://www.reso.co/templates/reso.co/css/vue.css">
+  <!-- fonts.css copié localement : reso.co n'autorise pas (CORS) le chargement de ses polices depuis un autre domaine -->
+  <link rel="stylesheet" href="preview/fonts/fonts.css">
+  <link rel="stylesheet" href="https://www.reso.co/assets/css/main.build.css">
+  <!-- Polices d'icônes (FontAF, Material Design Icons), même raison CORS : après main.build.css pour la remplacer -->
+  <link rel="stylesheet" href="preview/fonts/icons.css">
+  <!-- custom.css (éditeur CSS AlumnForce) : injecté ici par preview/preview.js -->
+  <style id="custom-css"></style>
+  <!-- Propre à l'aperçu (n'existe pas sur reso.co) : emplacement de la barre membre.
+       Même règle que main.build.css : à partir de 600 px, .af-push-content a une marge gauche de 60 px. -->
+  <style>
+    #preview-userbar { display: none; }
+    @media (min-width: 600px) {
+      #preview-userbar { display: block; position: fixed; top: 0; bottom: 0; left: 0; width: 60px; z-index: 2;
+        background: #faf9ea; box-shadow: 0 0 6px rgba(0, 0, 0, .2); }
+    }
+  </style>
+</head>
+<body>
+  <div id="preview-userbar" aria-hidden="true"></div>
+  <div id="global" class="global clearfix">
+    <div id="af-content" class="af-content af-push-content">
+      <main id="main-content" data-test="legacy-main-content-section"></main>
+    </div>
+  </div>
+
+  <!-- Conteneurs relevés sur https://www.reso.co/page/minuteur -->
+  <template id="tpl-page-statique">
+    <div class="content-wrap">
+      <div id="content" class="content container space-container">
+        <div class="static_page pull-down richedit_wrap" data-slot></div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Conteneurs relevés sur https://www.reso.co/ (widget « html libre » du tableau de bord).
+       Vue change les classes selon la largeur (data-bp) : voir BREAKPOINTS dans preview/preview.js -->
+  <template id="tpl-accueil">
+    <div class="v-app" data-tag-id="app">
+      <div id="app" class="v-application v-application--is-ltr theme--light" data-app="true">
+        <div class="v-application--wrap">
+          <div class="v-main" data-booted="true">
+            <div class="v-main__wrap">
+              <div data-tag-id="instance-layout-front-user-dashboard">
+                <div class="container py-8" data-tag-id="instance-layout-user-dashboard" data-bp="dashboard">
+                  <div class="row" data-bp="row">
+                    <div class="col col-9" data-bp="col">
+                      <div>
+                        <div data-tag-id="draggable">
+                          <div class="is-draggable">
+                            <div data-tag-id="instance-layout-widget-html-content">
+                              <div data-tag-id="instance-layout-widget-list-element">
+                                <div>
+                                  <div class="richedit_wrap" data-slot></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="preview/preview.js"></script>
+</body>
+</html>
