@@ -14,11 +14,11 @@ Tout ce qui se personnalise dans AlumnForce, **un fichier par formulaire du back
 |---|---|---|
 | `custom.css` | Éditeur CSS du site (servi sur `/site/css/show`) | Coller tel quel. **Partagé par toutes les pages** |
 | `accueil.yaml` | Configuration du tableau de bord (page d'accueil des membres) | Reproduire la liste des widgets, dans l'ordre |
-| `html-widget1.html` | Widget « html libre » n° 1 de l'accueil | Coller tel quel |
+| `html-widget1.html` … `html-widget5.html` | Widgets « html libre » de l'accueil (dans l'ordre de `accueil.yaml`) | Coller tel quel, un par widget |
 | `minuteur.html` | Page statique « Minuteur » | Coller tel quel |
 | `menus.yaml` | Gestion du menu (menu principal et sous-menus) | Reproduire les entrées |
 
-Pour un nouveau widget « html libre », créer `html-widget2.html` et l'ajouter à `accueil.yaml`.
+Pour un nouveau widget « html libre », créer `html-widget<n>.html` et l'ajouter à `accueil.yaml`.
 Pour une nouvelle page statique, créer `<nom>.html` et l'ajouter à `preview/pages.yaml`.
 
 ### `accueil.yaml` : les widgets de l'accueil
@@ -40,6 +40,29 @@ La liste des widgets du tableau de bord, dans l'ordre, slider compris :
   nom affiché sur son bouton de copie dans la visionneuse.
 
 Pour essayer un nouvel agencement, réordonner la liste ou y insérer des widgets « html libre ».
+
+**Sections par catégorie** (proposition 2026, CSS dans `custom.css`, section « ACCUEIL MEMBRES ») :
+l'accueil est découpé en sections, une par catégorie du menu. Une section commence par un widget
+« html libre » qui contient son titre en pilule :
+
+```html
+<p class="reso-section reso-section--evenements">Événements &amp; actualité</p>
+```
+
+Tous les widgets qui suivent, jusqu'à la section suivante, prennent la couleur de la catégorie :
+liseré gauche des cartes et bande de fond pleine largeur dans une teinte claire de la couleur,
+sur laquelle le titre est à cheval (modèle « Événements & actualité » de la maquette). Un widget
+ajouté dans une section prend donc ses couleurs sans toucher au CSS. Les couleurs et leurs teintes
+sont des variables en tête de la section MENU PRINCIPAL de `custom.css` (`--menu_…`, `--menu_…_fond`). Les sections doivent rester
+dans l'ordre du menu (`--etre-ensemble`, `--evenements`, `--enseignements`, `--pratique`, `--chemin`).
+
+Autres classes disponibles pour les widgets « html libre » : `reso-card` (carte blanche, avec
+`reso-card__badge`, `reso-card__title`, `reso-card__question`), `reso-group` (lien vers un groupe
+avec vignette, voir `html-widget1.html`) et `reso-cta` / `reso-cta__button` (bouton centré).
+
+Attention aux couleurs de liens : une feuille de style ajoutée par Vue **après** `custom.css`
+colore tous les liens des widgets en bleu (`#2196f3`) avec un sélecteur plus fort. Pour imposer une
+couleur à un lien, utiliser `!important` (l'aperçu le montre).
 
 ### `menus.yaml` : le menu
 

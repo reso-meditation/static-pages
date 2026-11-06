@@ -1,3 +1,7 @@
+/* Police des catégories du menu (proposition 2026). Un @import doit être en tête du fichier :
+   ailleurs, le navigateur l'ignore (c'est le cas de celui de la section FONTS plus bas). */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&display=swap');
+
 /* BASIC RESET */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -1325,3 +1329,328 @@ We apply this to the first green section, so it acts as a header */
     }
 }
 /* === Fin fix CS-14558 === */
+
+/* ==== MENU PRINCIPAL : 5 CATÉGORIES (proposition 2026) ====
+   Les catégories sont des pilules colorées. Elles sont reconnues à leur LIEN
+   (voir custom-af-content/menus.yaml) : garder ces liens en créant les entrées dans AlumnForce.
+   Les identifiants AlumnForce (#submenu-…) ne sont connus qu'une fois les entrées créées. */
+:root {
+    --menu_etre_ensemble: var(--color_purple);   /* #9f1557 */
+    --menu_evenements: #597E4A;
+    --menu_enseignements: #004D84;
+    --menu_pratique: #FF9A0C;
+    --menu_chemin: #E1DFDF;
+    /* Fonds des sections de l'accueil : teintes claires (~35 % de la couleur, comme le vert sauge
+       de la maquette pour Événements & actualité) */
+    --menu_etre_ensemble_fond: #DDADC4;
+    --menu_evenements_fond: #C6D1B8;
+    --menu_enseignements_fond: #A6C1D4;
+    --menu_pratique_fond: #FFDCAA;
+    --menu_chemin_fond: #F4F4F4;
+    --reso-pill-h: 44px;   /* hauteur des titres de section en pilule */
+}
+@media (max-width: 599px) {
+    :root { --reso-pill-h: 38px; }
+}
+
+/* -- Bureau -- */
+#header .js-scrollable-nav ul.nav > li {
+    padding: 0 2px;
+}
+#header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"],
+#header .js-scrollable-nav ul.nav > li > a[href="/agenda"],
+#header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"],
+#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"],
+#header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"] {
+    border-radius: 50px;
+    color: #fff;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif !important;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .01em;
+    line-height: 18px;
+    padding: 6px 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+#header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); }
+#header .js-scrollable-nav ul.nav > li > a[href="/agenda"] { background-color: var(--menu_evenements); }
+#header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"] { background-color: var(--menu_enseignements); }
+#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); }
+#header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: #000; }
+/* Survol : le fond de la pilule fonce légèrement (ombre intérieure), le texte garde sa couleur */
+#header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"]:hover,
+#header .js-scrollable-nav ul.nav > li > a[href="/agenda"]:hover,
+#header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"]:hover,
+#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]:hover {
+    box-shadow: inset 0 0 0 50px rgba(0, 0, 0, .14);
+    color: #fff;
+}
+#header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"]:hover {
+    box-shadow: inset 0 0 0 50px rgba(0, 0, 0, .07);
+    color: #000;
+}
+
+/* -- Mobile (bouton ☰) : même pilule, à gauche du chevron -- */
+#header ul.nav-mobile > li > div a[href="/page/comment-etre-ensemble-dans-reso"],
+#header ul.nav-mobile > li > div a[href="/agenda"],
+#header ul.nav-mobile > li > div a[href="/page/ressources"],
+#header ul.nav-mobile > li > div a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"],
+#header ul.nav-mobile > li > div a[href="/page/votre-chemin-dans-reso"] {
+    border-radius: 50px;
+    color: #fff;
+    display: inline-block;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif !important;
+    font-size: 16px;
+    letter-spacing: .02em;
+    line-height: 20px;
+    margin: 10px 0 10px 16px;
+    padding: 8px 18px;
+    text-transform: uppercase;
+    width: auto;
+}
+#header ul.nav-mobile > li > div a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); }
+#header ul.nav-mobile > li > div a[href="/agenda"] { background-color: var(--menu_evenements); }
+#header ul.nav-mobile > li > div a[href="/page/ressources"] { background-color: var(--menu_enseignements); }
+#header ul.nav-mobile > li > div a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); }
+#header ul.nav-mobile > li > div a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: #000; }
+/* ==== Fin MENU PRINCIPAL ==== */
+
+/* ==== ACCUEIL MEMBRES : SECTIONS PAR CATÉGORIE (proposition 2026) ====
+   L'accueil est découpé en sections, une par catégorie du menu (voir custom-af-content/accueil.yaml).
+   Une section commence par un widget « html libre » qui contient son titre en pilule :
+     <p class="reso-section reso-section--evenements">Événements &amp; actualité</p>
+   Tous les widgets qui suivent, jusqu'à la section suivante, prennent la couleur de la catégorie
+   (--section) et une bande de fond de sa teinte claire (--section-band), sur le modèle de la
+   maquette pour Événements & actualité : le titre est à cheval sur la bande.
+   Les règles ci-dessous doivent rester dans l'ordre des sections sur la page : à égalité, la
+   dernière règle qui s'applique à un widget l'emporte. */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--etre-ensemble), :has(.reso-section--etre-ensemble) ~ *) {
+    --section: var(--menu_etre_ensemble);
+    --section-band: var(--menu_etre_ensemble_fond);
+    --section-card-bg: transparent;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--evenements), :has(.reso-section--evenements) ~ *) {
+    --section: var(--menu_evenements);
+    --section-band: var(--menu_evenements_fond);
+    --section-card-bg: transparent;   /* mobile : la bande passe derrière les widgets */
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--enseignements), :has(.reso-section--enseignements) ~ *) {
+    --section: var(--menu_enseignements);
+    --section-band: var(--menu_enseignements_fond);
+    --section-card-bg: transparent;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--pratique), :has(.reso-section--pratique) ~ *) {
+    --section: var(--menu_pratique);
+    --section-band: var(--menu_pratique_fond);
+    --section-card-bg: transparent;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--chemin), :has(.reso-section--chemin) ~ *) {
+    --section: var(--menu_chemin);
+    --section-band: var(--menu_chemin_fond);
+    --section-card-bg: transparent;
+}
+
+/* Bande de fond pleine largeur, dessinée derrière le contenu de chaque widget (::before) :
+   déborde de 12 px en haut et en bas pour remplir l'espace entre deux widgets (24 px), et
+   jusqu'aux bords de l'écran (ombre de 100vmax). Elle commence au milieu de la pilule. */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable {
+    position: relative;
+    z-index: 0;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable::before {
+    background-color: var(--section-band, transparent);
+    bottom: -12px;
+    box-shadow: 0 0 0 100vmax var(--section-band, transparent);
+    clip-path: inset(0 -100vmax);
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: -13px;   /* 1 px de recouvrement avec le widget précédent : pas de ligne entre les deux */
+    z-index: -1;
+}
+/* Widget qui commence par un titre de section : la bande part du milieu de la pilule
+   (hauteur fixe --reso-pill-h, que la pilule soit seule dans le widget ou suivie d'autre contenu) */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:has(.reso-section)::before {
+    top: calc(var(--reso-pill-h) / 2);
+}
+/* Dernier widget d'une section : un peu d'air avant la section suivante.
+   (Les marges verticales fusionnent : 48 px ici et 24 px (mt-6) au suivant donnent 48 px.) */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:has(+ .is-draggable .reso-section) {
+    margin-bottom: 48px;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:has(+ .is-draggable .reso-section)::before {
+    bottom: -32px;   /* la bande s'arrête 16 px au-dessus de la pilule suivante */
+}
+/* Dernier widget de la page : la bande descend jusqu'au pied de page (marge basse du tableau de bord) */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:last-child::before {
+    bottom: -32px;
+}
+
+/* Titres de section en pilule (mêmes couleurs que le menu) */
+.v-app .richedit_wrap p.reso-section,
+.richedit_wrap p.reso-section {
+    background-color: var(--section, #555);
+    border-radius: 50px;
+    color: #fff;
+    display: inline-block;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif !important;
+    font-size: 20px;
+    height: var(--reso-pill-h);
+    letter-spacing: .03em;
+    line-height: 24px;
+    margin: 0;
+    padding: 10px 34px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.richedit_wrap p.reso-section--etre-ensemble { background-color: var(--menu_etre_ensemble); }
+.richedit_wrap p.reso-section--evenements { background-color: var(--menu_evenements); }
+.richedit_wrap p.reso-section--enseignements { background-color: var(--menu_enseignements); }
+.richedit_wrap p.reso-section--pratique { background-color: var(--menu_pratique); }
+.richedit_wrap p.reso-section--chemin { background-color: var(--menu_chemin); color: #000; }
+
+/* Mobile : les widgets dynamiques sont des blocs blancs pleine largeur ; dans une section avec bande,
+   leur fond devient transparent pour que la bande soit continue. */
+@media (max-width: 599px) {
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable .common-card-generic {
+        background-color: var(--section-card-bg, #fff) !important;
+    }
+}
+
+/* Cartes : coins arrondis et liseré gauche à la couleur de la section (comme la maquette) */
+@media (min-width: 600px) {
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable .common-card-generic {
+        border-radius: 16px !important;
+        box-shadow: -7px 0 0 0 var(--section, transparent), 0 2px 6px rgba(0, 0, 0, .15) !important;
+    }
+}
+
+/* Carte « html libre » (ex. Groupe de partage) */
+.reso-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: -7px 0 0 0 var(--section, transparent), 0 2px 6px rgba(0, 0, 0, .15);
+    margin-top: 24px;
+    padding: 28px 32px 32px;
+    position: relative;
+}
+.v-app .richedit_wrap .reso-card__badge,
+.richedit_wrap .reso-card__badge {
+    background-color: var(--color_yellow);
+    border-radius: 50px;
+    color: var(--color_blue);
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+    padding: 4px 18px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+.v-app .richedit_wrap .reso-card .reso-card__title,
+.richedit_wrap .reso-card .reso-card__title {
+    font-size: 24px;
+    font-weight: 700 !important;
+    margin: 0 0 .6em;
+    padding-right: 110px;   /* place du badge */
+}
+.v-app .richedit_wrap .reso-card__question,
+.richedit_wrap .reso-card__question {
+    font-style: italic;
+    font-weight: 700;
+    margin-top: 1.2em;
+}
+/* Lien vers un groupe : vignette + nom.
+   Couleurs en !important : une feuille de style ajoutée par Vue APRÈS custom.css colore tous les
+   liens en bleu (#2196f3) avec un sélecteur plus fort. */
+.v-app .richedit_wrap a.reso-group,
+.richedit_wrap a.reso-group {
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
+    color: #212121 !important;
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    max-width: 560px;
+    padding: 14px;
+    text-decoration: none;
+}
+.v-app .richedit_wrap a.reso-group:hover,
+.richedit_wrap a.reso-group:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+}
+.richedit_wrap .reso-group img.reso-group__img {
+    border-radius: 10px;
+    flex: none;
+    height: 96px;
+    margin: 0 !important;
+    object-fit: cover;
+    width: 128px;
+}
+.reso-group__txt {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.reso-group__txt span { color: #616161; }
+.reso-group__txt strong { color: var(--section, #212121); }
+
+/* Bouton centré (ex. « Tous les enseignements ») */
+.v-app .richedit_wrap p.reso-cta,
+.richedit_wrap p.reso-cta {
+    margin: 8px 0 0;
+    text-align: center;
+}
+.v-app .richedit_wrap a.reso-cta__button,
+.richedit_wrap a.reso-cta__button {
+    background-color: var(--section, var(--menu_enseignements));
+    border-radius: 50px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+    color: #fff !important;   /* voir la remarque sur les liens plus haut */
+    display: inline-block;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 18px;
+    letter-spacing: .03em;
+    padding: 10px 34px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* Mobile : le widget touche les bords de l'écran, on redonne une marge au contenu */
+@media (max-width: 599px) {
+    .v-app .richedit_wrap p.reso-section,
+    .richedit_wrap p.reso-section {
+        font-size: 18px;
+        line-height: 22px;
+        margin-left: 16px;
+        padding: 8px 26px;
+    }
+    .reso-card {
+        margin: 20px 16px 0;
+        padding: 20px;
+    }
+    .v-app .richedit_wrap .reso-card .reso-card__title,
+    .richedit_wrap .reso-card .reso-card__title {
+        font-size: 21px;
+        padding-right: 0;
+    }
+    .v-app .richedit_wrap .reso-card__badge,
+    .richedit_wrap .reso-card__badge {
+        display: inline-block;
+        margin-bottom: 12px;
+        position: static;
+    }
+    .v-app .richedit_wrap a.reso-group,
+    .richedit_wrap a.reso-group {
+        gap: 14px;
+        padding: 10px;
+    }
+    .richedit_wrap .reso-group img.reso-group__img {
+        height: 72px;
+        width: 88px;
+    }
+}
+/* ==== Fin ACCUEIL MEMBRES ==== */

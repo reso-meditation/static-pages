@@ -316,6 +316,7 @@
     }
     if (mobile) mobile.innerHTML = mobileMenu(items, 0);
     setupDropdowns();
+    watchNavSizes();
     syncScrollableNav();
   }
 
@@ -435,6 +436,15 @@
       if (next) next.classList.toggle('js-scrollable-nav--button-active', ul.scrollLeft + ul.clientWidth < ul.scrollWidth - 1);
     });
   }
+  // Recalcule le débordement dès que la taille d'une entrée change (styles, polices, menu régénéré),
+  // quel que soit l'ordre dans lequel ils arrivent.
+  var navResize = window.ResizeObserver ? new ResizeObserver(function () { syncScrollableNav(); }) : null;
+  function watchNavSizes() {
+    if (!navResize) return;
+    navResize.disconnect();
+    document.querySelectorAll('#header .js-scrollable-nav ul.nav > li').forEach(function (li) { navResize.observe(li); });
+  }
+
   function initScrollableNav() {
     document.querySelectorAll('#header .js-scrollable-nav').forEach(function (nav) {
       var ul = nav.querySelector('ul.nav');
@@ -448,8 +458,13 @@
       ul.addEventListener('scroll', syncScrollableNav);
     });
     window.addEventListener('resize', syncScrollableNav);
+    watchNavSizes();
     syncScrollableNav();
-    if (document.fonts) document.fonts.ready.then(syncScrollableNav);
+    // Les polices (dont celles importées par custom.css) changent la largeur du menu : recalculer.
+    if (document.fonts) {
+      document.fonts.ready.then(syncScrollableNav);
+      document.fonts.addEventListener('loadingdone', syncScrollableNav);
+    }
   }
 
   if (!pageId) return showError('Paramètre ?page= manquant.');

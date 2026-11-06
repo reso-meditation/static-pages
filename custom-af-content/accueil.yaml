@@ -9,14 +9,35 @@
 #     titre: <texte>         (facultatif) nom affiché dans la visionneuse
 #
 # Le slider est toujours en tête : sur reso.co, AlumnForce le place au-dessus des autres widgets.
+#
+# Proposition 2026 : la page est découpée en sections, une par catégorie du menu. Chaque section
+# commence par un widget « html libre » qui contient son titre en pilule (classe reso-section--…).
+# custom.css donne la couleur de la catégorie à tous les widgets qui suivent, jusqu'à la section
+# suivante (bordure gauche des cartes, bande de fond pour Événements & actualité).
+# Les sections doivent rester dans l'ordre du menu : Être ensemble, Événements & actualité,
+# Enseignements & replays, Pratique au quotidien.
 
 - widget: slider
 
+# --- Être ensemble ---
 - html: html-widget1.html
-  titre: Bandeau groupe de partage
+  titre: Être ensemble + Groupe de partage
 
+# --- Événements & actualité ---
+- html: html-widget2.html
+  titre: Titre Événements & actualité
 - widget: nos-prochaines-rencontres
-- widget: les-nouvelles-de-reso
-- widget: les-derniers-replays
 - widget: les-prochains-stages
+- widget: les-nouvelles-de-reso
+
+# --- Enseignements & replays ---
+- html: html-widget3.html
+  titre: Titre Enseignements & replays
+- widget: les-derniers-replays
+- html: html-widget4.html
+  titre: Bouton Tous les enseignements
+
+# --- Pratique au quotidien ---
+- html: html-widget5.html
+  titre: Titre Pratique au quotidien
 - widget: meditations-du-quotidien

@@ -15,61 +15,84 @@
 # (les identifiants AlumnForce, eux, ne sont connus qu'une fois l'entrée créée) :
 #   #header ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"]
 #
-- titre: Accueil
-  lien: /default/index/index
+# ---------------------------------------------------------------------------------------------
+# Proposition 2026 (document « Page d'accueil + menu interne Reso - Proposition 2026 ») :
+# 5 catégories, sans Accueil (le logo y mène) ni Aide (à mettre dans le pied de page), avec les remarques de Benjamin Couchot (« Être ensemble » au lieu de
+# « Communauté », « Les groupes locaux », « Les groupes en ligne », « La voie des gardiennes et
+# des gardiens du cœur », Méditons ensemble aussi dans Être ensemble).
+#
+# Les 5 catégories sont colorées par custom.css (section « MENU PRINCIPAL : 5 CATÉGORIES »),
+# qui les reconnaît à leur LIEN : en les créant dans AlumnForce, garder exactement ces liens.
+#   Être ensemble            /page/comment-etre-ensemble-dans-reso
+#   Événements & actualité   /agenda
+#   Enseignements & replays  /page/ressources
+#   Pratique au quotidien    /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
+#   Votre chemin dans Reso   /page/votre-chemin-dans-reso
+# ---------------------------------------------------------------------------------------------
+
 - titre: Être ensemble
   lien: /page/comment-etre-ensemble-dans-reso
   sous-menu:
     - titre: Comment être ensemble dans Reso
       lien: /page/comment-etre-ensemble-dans-reso
-    - titre: Annuaire des membres
-      lien: /addressbook/fullsearch/index
     - titre: Les enseignants
       lien: /page/les-enseignants
-    - titre: Les groupes
-      lien: /groups
-    - titre: Les antennes et groupes locaux
+    - titre: Les groupes locaux
       lien: /page/nos-antennes-1
+    - titre: Les groupes en ligne
+      lien: /groups
+    - titre: Méditons ensemble
+      lien: /page/activites-groupes
+    - titre: Groupe de partage
+      lien: https://www.reso.co/group/groupe-de-partages-des-membres-de-reso/287
+    - titre: Annuaire des membres
+      lien: /addressbook/fullsearch/index
     - titre: Offrir la méditation aux aînés et aux aidants
       lien: /page/ompa
     - titre: Statuts et bureau de l'association
       lien: /page/statuts-et-bureau-de-l-association
-- titre: Programme
-  lien: /page/votre-chemin-dans-reso
+
+- titre: Événements & actualité
+  lien: /agenda
   sous-menu:
-    - titre: Votre chemin dans Reso
-      lien: /page/votre-chemin-dans-reso
-    - titre: Le chemin des stages
-      lien: /page/voie-stages
-    - titre: La voie bouddhiste
-      lien: /page/la-voie-bouddhiste
-    - titre: La voie kasung
-      lien: /page/la-voie-kasung
-    - titre: Programmation 2026 - 2027
-      lien: https://www.reso.co/page/programme-2026-2027
-- titre: Ressources
+    - titre: Agenda général
+      lien: /agenda
+    - titre: Agenda Paris
+      lien: https://reso.co/group/paris-maison-de-la-meditation/37/calendar
+    - titre: Agenda des stages
+      lien: /agenda/upcoming?category%5B0%5D=281
+    # La minute Reso : liste « Les nouvelles de Reso », qui l'inclut
+    - titre: La minute Reso
+      lien: /actualites?category=316,308,305,313
+    - titre: Blog
+      lien: /articles/categories/311
+
+- titre: Enseignements & replays
   lien: /page/ressources
   sous-menu:
     - titre: Présentation des enseignements et méditations
       lien: /page/ressources
-    - titre: Enseignements
+    - titre: Tous les enseignements
       lien: /articles/categories/290%2C302%2C303%2C300%2C299%2C291%2C310
-      sous-menu:
-        - titre: Cycles en cours - Replay
-          lien: /articles/categories/310
-        - titre: Cycles sur l'existence et la méditation
-          lien: /articles/categories/303
-        - titre: Une Heure, une Œuvre
-          lien: /articles/categories/299
-        - titre: Cycles de philosophie
-          lien: /articles/categories/300
-        - titre: Cycles sur le bouddhisme
-          lien: /articles/categories/291
-        - titre: Cycles passés pour "Méditons Ensemble"
-          lien: /articles/categories/301
-        - titre: Rencontres et conférences
-          lien: /articles/categories/302
-    - titre: Méditations
+    - titre: Cycles en cours - Replay
+      lien: /articles/categories/310
+    - titre: Rencontres et conférences
+      lien: /articles/categories/302
+    - titre: Cycles sur l'existence et la méditation
+      lien: /articles/categories/303
+    - titre: Une Heure, une Œuvre
+      lien: /articles/categories/299
+    - titre: Cycles de philosophie
+      lien: /articles/categories/300
+    - titre: Cycles sur le bouddhisme
+      lien: /articles/categories/291
+    - titre: Cycles passés pour "Méditons Ensemble"
+      lien: /articles/categories/301
+
+- titre: Pratique au quotidien
+  lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
+  sous-menu:
+    - titre: Pratiquer seul au quotidien
       lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
       sous-menu:
         - titre: Méditations du quotidien
@@ -86,42 +109,34 @@
           lien: /articles/categories/297
         - titre: Méditations spécifiques
           lien: /articles/categories/298
-- titre: Activités
-  lien: /page/activites-1
+        - titre: Timer
+          lien: https://www.reso.co/page/minuteur
+    - titre: Pratiquer ensemble au quotidien
+      lien: /page/activites-groupes
+      sous-menu:
+        - titre: Méditons ensemble
+          lien: /page/activites-groupes
+
+- titre: Votre chemin dans Reso
+  lien: /page/votre-chemin-dans-reso
   sous-menu:
+    - titre: Votre chemin dans Reso
+      lien: /page/votre-chemin-dans-reso
+    - titre: Le chemin des stages
+      lien: /page/voie-stages
+    - titre: La voie bouddhiste
+      lien: /page/la-voie-bouddhiste
+    - titre: La voie des gardiennes et des gardiens du cœur
+      lien: /page/la-voie-kasung
+    # Deux pages quasi identiques existent : programme-2026-2027 (gardée, avec la rediffusion)
+    # et programmation-2026-2027 (à supprimer dans AlumnForce)
+    - titre: Programmation 2026 - 2027
+      lien: https://www.reso.co/page/programme-2026-2027
     - titre: Stage - 5 jours pour découvrir la méditation
       lien: /page/activites-stages
-    - titre: Groupes de méditation en ligne
-      lien: /page/activites-groupes
-    - titre: Cours et séminaires en ligne
-      lien: /page/activites-education-populaire
     - titre: Formations
       lien: https://formations.reso.co/
-    - titre: Programmation 2026 - 2027
-      lien: /page/programmation-2026-2027
-- titre: Agenda
-  lien: /agenda
-  sous-menu:
-    - titre: Agenda général
-      lien: /agenda
-    - titre: Agenda Paris
-      lien: https://reso.co/group/paris-maison-de-la-meditation/37/calendar
-    - titre: Agenda des stages
-      lien: /agenda/upcoming?category%5B0%5D=281
-- titre: Blog
-  lien: /articles/categories/311
-- titre: Timer
-  lien: https://www.reso.co/page/minuteur
-- titre: Aide
-  lien: https://reso.co/help/
-  sous-menu:
-    - titre: Questions fréquentes et tutoriels
-      lien: https://reso.co/help/
-    - titre: Contacts référents
-      lien: /contacts-referents/
-    - titre: Liens utiles
-      lien: /page/liens-utiles
-    - titre: Téléchargez l'application Reso
-      lien: /page/telechargez-l-application-reso
-    - titre: Accessibilité et handicap
-      lien: /page/accessibilite-et-handicap
+    - titre: Cours et séminaires en ligne
+      lien: /page/activites-education-populaire
+    - titre: Méditons ensemble
+      lien: /page/activites-groupes
