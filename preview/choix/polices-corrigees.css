@@ -1,0 +1,4 @@
+/* Polices prévues par custom.css (Inter pour le texte, Libre Baskerville pour les titres) :
+   aujourd'hui leur @import est au milieu de custom.css, donc ignoré par les navigateurs.
+   Pour l'adopter : déplacer cet @import en tête de custom.css. Touche TOUT le site. */
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Libre+Baskerville:wght@400;700&display=swap');

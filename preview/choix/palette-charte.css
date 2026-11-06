@@ -1,0 +1,18 @@
+/* Palette 2 du document (« charte Reso ») : couleurs des 5 catégories, teintes claires des fonds (35 %), couleur du texte. */
+:root {
+    --menu_etre_ensemble: #982179;
+    --menu_evenements: #005B31;
+    --menu_enseignements: #004D84;
+    --menu_pratique: #FFD400;
+    --menu_chemin: #6923A5;
+    --menu_etre_ensemble_fond: #DBB1D0;
+    --menu_evenements_fond: #A6C6B7;
+    --menu_enseignements_fond: #A6C1D4;
+    --menu_pratique_fond: #FFF0A6;
+    --menu_chemin_fond: #CAB2E0;
+    --menu_etre_ensemble_texte: #fff;
+    --menu_evenements_texte: #fff;
+    --menu_enseignements_texte: #fff;
+    --menu_pratique_texte: #000;
+    --menu_chemin_texte: #fff;
+}

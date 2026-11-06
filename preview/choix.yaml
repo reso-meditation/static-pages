@@ -1,0 +1,110 @@
+# Choix à trancher (réunion de communication interne), proposés dans la visionneuse (panneau « Choix »).
+# Ils ne s'appliquent qu'à la version « Proposition » (custom-af-content/), pas à « Production ».
+#
+# Chaque choix :
+#   id:        identifiant (dans l'adresse de la visionneuse)
+#   question:  intitulé affiché
+#   options:   les réponses possibles ; la PREMIÈRE est celle de custom-af-content/ (par défaut)
+#     - id, titre, detail (facultatif)
+#       couleurs:  (facultatif) pastilles affichées à côté du titre
+#       css:       (facultatif) fichier de preview/choix/, ajouté juste après custom.css
+#       menus:     (facultatif) modifications du menu (custom-af-content/menus.yaml) :
+#                    renommer: { "Catégorie > Entrée": "Nouveau titre" }
+#                    retirer:  [ "Catégorie > Entrée" ]
+#                  Une entrée est désignée par les titres de ses parents et le sien, séparés par « > ».
+#
+# Une réponse retenue s'intègre ensuite à custom-af-content/ (custom.css, menus.yaml) :
+# en production, seul ce dossier compte.
+
+- id: palette
+  question: Couleurs des catégories
+  options:
+    - id: maquette
+      titre: Maquette de l'accueil
+      detail: Magenta de la charte (déjà dans custom.css), vert et bleu de la maquette, orange et gris de la palette 1.
+      couleurs: ["#9F1557", "#597E4A", "#004D84", "#FF9A0C", "#E1DFDF"]
+    - id: palette-1
+      titre: Palette 1 du document
+      couleurs: ["#AA4891", "#597E4A", "#4F6197", "#FF9A0C", "#E1DFDF"]
+      css: palette-1.css
+    - id: charte
+      titre: Palette 2 du document (« charte Reso »)
+      couleurs: ["#982179", "#005B31", "#004D84", "#FFD400", "#6923A5"]
+      css: palette-charte.css
+    - id: palette-3
+      titre: Palette 3 du document
+      couleurs: ["#551800", "#D70900", "#004680", "#FFD400", "#EBE4E0"]
+      css: palette-3.css
+
+- id: fonds
+  question: Fond des sections de l'accueil
+  options:
+    - id: toutes
+      titre: Une bande de couleur par section
+      detail: Le modèle « Événements & actualité » de la maquette, appliqué à chaque section.
+    - id: evenements
+      titre: Seulement Événements & actualité
+      detail: Comme la maquette.
+      css: fonds-evenements.css
+    - id: aucune
+      titre: Aucune bande
+      detail: Les sections ne sont marquées que par leur titre et le liseré des cartes.
+      css: fonds-aucun.css
+
+- id: lisere
+  question: Liseré coloré à gauche des cartes
+  options:
+    - id: oui
+      titre: Avec liseré
+    - id: non
+      titre: Sans liseré
+      css: sans-lisere.css
+
+- id: sous-menus
+  question: Style des sous-menus (bureau)
+  options:
+    - id: alumnforce
+      titre: Style AlumnForce actuel
+      detail: Fond gris, entrée survolée en jaune vif.
+    - id: cartes
+      titre: Cartes blanches arrondies
+      detail: Ombre douce, entrée survolée en jaune clair.
+      css: sous-menus-cartes.css
+
+- id: meditons
+  question: Où mettre « Méditons ensemble » ?
+  options:
+    - id: les-deux
+      titre: Être ensemble et Pratique au quotidien
+    - id: pratique
+      titre: Seulement Pratique au quotidien
+      detail: Document et Rebecca.
+      menus:
+        retirer: ["Être ensemble > Méditons ensemble"]
+    - id: etre-ensemble
+      titre: Seulement Être ensemble
+      detail: Proposition de Benjamin Couchot.
+      menus:
+        retirer: ["Pratique au quotidien > Pratiquer ensemble au quotidien"]
+
+- id: nom-chemin
+  question: Nom de la 5e catégorie
+  options:
+    - id: votre-chemin
+      titre: Votre chemin dans Reso
+    - id: se-reperer
+      titre: Se repérer dans Reso
+      detail: Proposition de Rebecca.
+      menus:
+        renommer: { "Votre chemin dans Reso": "Se repérer dans Reso" }
+
+- id: polices
+  question: Polices du site
+  options:
+    - id: actuelles
+      titre: Actuelles (polices du système)
+      detail: L'@import de Inter et Libre Baskerville est mal placé dans custom.css, donc ignoré.
+    - id: corrigees
+      titre: Inter et Libre Baskerville, comme prévu
+      detail: Touche tout le site, pas seulement l'accueil.
+      css: polices-corrigees.css

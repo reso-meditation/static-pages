@@ -2,7 +2,7 @@
 #
 # Ce fichier décrit le menu à configurer dans le back-office AlumnForce (gestion du menu) :
 # il ne se colle pas dans le site. Point de départ : le menu actuel du site,
-# capturé dans preview/site/menu-site.yaml (même format) — comparer les deux pour voir les changements.
+# capturé dans preview/site/production/menus.yaml (même format) — comparer les deux pour voir les changements.
 #
 # Chaque entrée :
 #   titre:      texte affiché

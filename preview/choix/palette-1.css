@@ -1,0 +1,18 @@
+/* Palette 1 du document (tons doux) : couleurs des 5 catégories, teintes claires des fonds (35 %), couleur du texte. */
+:root {
+    --menu_etre_ensemble: #AA4891;
+    --menu_evenements: #597E4A;
+    --menu_enseignements: #4F6197;
+    --menu_pratique: #FF9A0C;
+    --menu_chemin: #E1DFDF;
+    --menu_etre_ensemble_fond: #E1BFD8;
+    --menu_evenements_fond: #C5D2C0;
+    --menu_enseignements_fond: #C1C8DB;
+    --menu_pratique_fond: #FFDCAA;
+    --menu_chemin_fond: #F4F4F4;
+    --menu_etre_ensemble_texte: #fff;
+    --menu_evenements_texte: #fff;
+    --menu_enseignements_texte: #fff;
+    --menu_pratique_texte: #fff;
+    --menu_chemin_texte: #000;
+}

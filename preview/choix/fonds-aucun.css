@@ -1,0 +1,6 @@
+/* Pas de bande de fond : seuls les titres en pilule et le liseré des cartes marquent les sections. */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--etre-ensemble), :has(.reso-section--etre-ensemble) ~ *) { --section-band: transparent; --section-card-bg: #fff; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--evenements), :has(.reso-section--evenements) ~ *) { --section-band: transparent; --section-card-bg: #fff; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--enseignements), :has(.reso-section--enseignements) ~ *) { --section-band: transparent; --section-card-bg: #fff; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--pratique), :has(.reso-section--pratique) ~ *) { --section-band: transparent; --section-card-bg: #fff; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--chemin), :has(.reso-section--chemin) ~ *) { --section-band: transparent; --section-card-bg: #fff; }

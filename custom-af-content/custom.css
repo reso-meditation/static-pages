@@ -1347,6 +1347,12 @@ We apply this to the first green section, so it acts as a header */
     --menu_enseignements_fond: #A6C1D4;
     --menu_pratique_fond: #FFDCAA;
     --menu_chemin_fond: #F4F4F4;
+    /* Couleur du texte sur chaque couleur (noir sur les couleurs claires) */
+    --menu_etre_ensemble_texte: #fff;
+    --menu_evenements_texte: #fff;
+    --menu_enseignements_texte: #fff;
+    --menu_pratique_texte: #fff;
+    --menu_chemin_texte: #000;
     --reso-pill-h: 44px;   /* hauteur des titres de section en pilule */
 }
 @media (max-width: 599px) {
@@ -1373,22 +1379,18 @@ We apply this to the first green section, so it acts as a header */
     text-transform: uppercase;
     white-space: nowrap;
 }
-#header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); }
-#header .js-scrollable-nav ul.nav > li > a[href="/agenda"] { background-color: var(--menu_evenements); }
-#header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"] { background-color: var(--menu_enseignements); }
-#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); }
-#header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: #000; }
+#header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); color: var(--menu_etre_ensemble_texte); }
+#header .js-scrollable-nav ul.nav > li > a[href="/agenda"] { background-color: var(--menu_evenements); color: var(--menu_evenements_texte); }
+#header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"] { background-color: var(--menu_enseignements); color: var(--menu_enseignements_texte); }
+#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); color: var(--menu_pratique_texte); }
+#header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: var(--menu_chemin_texte); }
 /* Survol : le fond de la pilule fonce légèrement (ombre intérieure), le texte garde sa couleur */
 #header .js-scrollable-nav ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"]:hover,
 #header .js-scrollable-nav ul.nav > li > a[href="/agenda"]:hover,
 #header .js-scrollable-nav ul.nav > li > a[href="/page/ressources"]:hover,
-#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]:hover {
-    box-shadow: inset 0 0 0 50px rgba(0, 0, 0, .14);
-    color: #fff;
-}
+#header .js-scrollable-nav ul.nav > li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]:hover,
 #header .js-scrollable-nav ul.nav > li > a[href="/page/votre-chemin-dans-reso"]:hover {
-    box-shadow: inset 0 0 0 50px rgba(0, 0, 0, .07);
-    color: #000;
+    box-shadow: inset 0 0 0 50px rgba(0, 0, 0, .12);
 }
 
 /* -- Mobile (bouton ☰) : même pilule, à gauche du chevron -- */
@@ -1409,11 +1411,11 @@ We apply this to the first green section, so it acts as a header */
     text-transform: uppercase;
     width: auto;
 }
-#header ul.nav-mobile > li > div a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); }
-#header ul.nav-mobile > li > div a[href="/agenda"] { background-color: var(--menu_evenements); }
-#header ul.nav-mobile > li > div a[href="/page/ressources"] { background-color: var(--menu_enseignements); }
-#header ul.nav-mobile > li > div a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); }
-#header ul.nav-mobile > li > div a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: #000; }
+#header ul.nav-mobile > li > div a[href="/page/comment-etre-ensemble-dans-reso"] { background-color: var(--menu_etre_ensemble); color: var(--menu_etre_ensemble_texte); }
+#header ul.nav-mobile > li > div a[href="/agenda"] { background-color: var(--menu_evenements); color: var(--menu_evenements_texte); }
+#header ul.nav-mobile > li > div a[href="/page/ressources"] { background-color: var(--menu_enseignements); color: var(--menu_enseignements_texte); }
+#header ul.nav-mobile > li > div a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"] { background-color: var(--menu_pratique); color: var(--menu_pratique_texte); }
+#header ul.nav-mobile > li > div a[href="/page/votre-chemin-dans-reso"] { background-color: var(--menu_chemin); color: var(--menu_chemin_texte); }
 /* ==== Fin MENU PRINCIPAL ==== */
 
 /* ==== ACCUEIL MEMBRES : SECTIONS PAR CATÉGORIE (proposition 2026) ====
@@ -1427,26 +1429,31 @@ We apply this to the first green section, so it acts as a header */
    dernière règle qui s'applique à un widget l'emporte. */
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--etre-ensemble), :has(.reso-section--etre-ensemble) ~ *) {
     --section: var(--menu_etre_ensemble);
+    --section-texte: var(--menu_etre_ensemble_texte);
     --section-band: var(--menu_etre_ensemble_fond);
     --section-card-bg: transparent;
 }
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--evenements), :has(.reso-section--evenements) ~ *) {
     --section: var(--menu_evenements);
+    --section-texte: var(--menu_evenements_texte);
     --section-band: var(--menu_evenements_fond);
     --section-card-bg: transparent;   /* mobile : la bande passe derrière les widgets */
 }
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--enseignements), :has(.reso-section--enseignements) ~ *) {
     --section: var(--menu_enseignements);
+    --section-texte: var(--menu_enseignements_texte);
     --section-band: var(--menu_enseignements_fond);
     --section-card-bg: transparent;
 }
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--pratique), :has(.reso-section--pratique) ~ *) {
     --section: var(--menu_pratique);
+    --section-texte: var(--menu_pratique_texte);
     --section-band: var(--menu_pratique_fond);
     --section-card-bg: transparent;
 }
 [data-tag-id="instance-layout-user-dashboard"] .is-draggable:is(:has(.reso-section--chemin), :has(.reso-section--chemin) ~ *) {
     --section: var(--menu_chemin);
+    --section-texte: var(--menu_chemin_texte);
     --section-band: var(--menu_chemin_fond);
     --section-card-bg: transparent;
 }
@@ -1505,11 +1512,11 @@ We apply this to the first green section, so it acts as a header */
     text-transform: uppercase;
     white-space: nowrap;
 }
-.richedit_wrap p.reso-section--etre-ensemble { background-color: var(--menu_etre_ensemble); }
-.richedit_wrap p.reso-section--evenements { background-color: var(--menu_evenements); }
-.richedit_wrap p.reso-section--enseignements { background-color: var(--menu_enseignements); }
-.richedit_wrap p.reso-section--pratique { background-color: var(--menu_pratique); }
-.richedit_wrap p.reso-section--chemin { background-color: var(--menu_chemin); color: #000; }
+.v-app .richedit_wrap p.reso-section--etre-ensemble, .richedit_wrap p.reso-section--etre-ensemble { background-color: var(--menu_etre_ensemble); color: var(--menu_etre_ensemble_texte); }
+.v-app .richedit_wrap p.reso-section--evenements, .richedit_wrap p.reso-section--evenements { background-color: var(--menu_evenements); color: var(--menu_evenements_texte); }
+.v-app .richedit_wrap p.reso-section--enseignements, .richedit_wrap p.reso-section--enseignements { background-color: var(--menu_enseignements); color: var(--menu_enseignements_texte); }
+.v-app .richedit_wrap p.reso-section--pratique, .richedit_wrap p.reso-section--pratique { background-color: var(--menu_pratique); color: var(--menu_pratique_texte); }
+.v-app .richedit_wrap p.reso-section--chemin, .richedit_wrap p.reso-section--chemin { background-color: var(--menu_chemin); color: var(--menu_chemin_texte); }
 
 /* Mobile : les widgets dynamiques sont des blocs blancs pleine largeur ; dans une section avec bande,
    leur fond devient transparent pour que la bande soit continue. */
@@ -1609,7 +1616,7 @@ We apply this to the first green section, so it acts as a header */
     background-color: var(--section, var(--menu_enseignements));
     border-radius: 50px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
-    color: #fff !important;   /* voir la remarque sur les liens plus haut */
+    color: var(--section-texte, #fff) !important;   /* voir la remarque sur les liens plus haut */
     display: inline-block;
     font-family: 'Oswald', 'Arial Narrow', sans-serif;
     font-size: 18px;

@@ -68,7 +68,7 @@ couleur à un lien, utiliser `!important` (l'aperçu le montre).
 
 L'aperçu génère le menu de l'en-tête (bureau et mobile) à partir de ce fichier, avec le
 balisage d'AlumnForce. Au départ, c'est une copie du menu actuel du site, capturé dans
-`preview/site/menu-site.yaml` (même format) : comparer les deux montre les changements à faire
+`preview/site/production/menus.yaml` (même format) : comparer les deux montre les changements à faire
 dans le back-office.
 
 ```yaml
@@ -104,7 +104,9 @@ y est `li > div a`, une entrée simple `li > a`. Vérifier les deux dans l'aper�
 |---|---|
 | `index.html`, `preview.html`, `preview/` | Outil d'aperçu (rien à coller) |
 | `preview/pages.yaml` | Pages affichées dans la visionneuse : `id`, `titre`, `type` (`page-statique` ou `accueil`), `contenu` (fichier de `custom-af-content/`), `url` sur reso.co |
-| `preview/site/` | Captures de reso.co : en-tête, pied de page, widgets dynamiques, styles Vue, menu actuel |
+| `preview/choix.yaml`, `preview/choix/` | Choix à trancher (palettes, options CSS, variantes du menu), voir plus bas |
+| `preview/site/` | Captures de reso.co : en-tête, pied de page, widgets dynamiques, styles Vue |
+| `preview/site/production/` | Le contenu personnalisable actuellement en ligne (même format que `custom-af-content/`) |
 | `tools/` | Script de capture de reso.co |
 
 ## Aperçu en local
@@ -119,9 +121,33 @@ avertissements de la visionneuse, et l'aperçu garde la dernière version valide
 
 La visionneuse permet de :
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
-- copier le HTML (un bouton par widget « html libre ») ou `custom.css`, prêt à coller ;
+- comparer la **Proposition** (`custom-af-content/`) et la **Production** (ce qui est en ligne) ;
+- essayer les **choix** de `preview/choix.yaml` (panneau « Choix ») ;
+- copier le contenu à coller dans AlumnForce (`custom.css`, un bouton par widget « html libre ») ;
 - voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil, widget inconnu,
   erreur dans un fichier YAML…).
+
+### Comparer et choisir (réunions)
+
+Deux réglages, **A** et **B**, chacun composé d'une version (Proposition ou Production) et, pour la
+Proposition, d'une réponse à chaque choix. Par défaut : A = Proposition, B = Production.
+
+- **◧ Comparer** (touche `C`) : A et B côte à côte, défilement synchronisé.
+- **⇄ Basculer** (touche `B`) : échange A et B ; seul, c'est un « avant / après » instantané.
+- **Panneau Choix** : une colonne de boutons par réglage (A, B en mode comparaison).
+- **Copier le résumé** : la liste des choix de A (et B), avec le lien, pour un compte rendu.
+- **Copier le lien** : l'adresse contient tout l'état (`#page=…&a=proposition~palette:charte&b=…`).
+
+`preview/choix.yaml` décrit les questions et leurs réponses ; la première réponse de chaque
+question est la proposition actuelle (`custom-af-content/`). Une réponse peut :
+- ajouter un fichier CSS de `preview/choix/` juste après `custom.css` (palettes : variables
+  `--menu_…` ; options : règles qui remplacent celles de `custom.css`) ;
+- modifier le menu : `renommer` ou `retirer` des entrées, désignées par leur chemin
+  (`"Être ensemble > Méditons ensemble"`). Les réponses de plusieurs questions se combinent.
+
+Une réponse retenue en réunion s'intègre ensuite dans `custom-af-content/` (CSS dans
+`custom.css`, menu dans `menus.yaml`) et devient la première réponse de sa question :
+en production, seul `custom-af-content/` compte.
 
 ## Fidélité du rendu
 
@@ -152,8 +178,9 @@ La visionneuse permet de :
 ### Mettre à jour les captures
 
 Les captures (`preview/site/`) figent le site au moment où elles sont faites : contenu des
-widgets (prochaines rencontres, replays…), menu, pied de page, styles Vue. À refaire quand
-le site change :
+widgets (prochaines rencontres, replays…), menu, pied de page, styles Vue, et la version
+Production (`preview/site/production/` : `custom.css` en ligne, widgets « html libre » de l'accueil,
+ordre des widgets, menu). À refaire quand le site change, et après chaque mise en production :
 
 ```sh
 cd tools && npm install && npx playwright-core install chromium   # une seule fois

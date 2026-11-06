@@ -1,0 +1,7 @@
+/* Cartes sans liseré coloré à gauche (coins arrondis gardés). */
+@media (min-width: 600px) {
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable .common-card-generic {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .15) !important;
+    }
+}
+.reso-card { box-shadow: 0 2px 6px rgba(0, 0, 0, .15); }

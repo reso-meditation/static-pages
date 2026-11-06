@@ -2,7 +2,9 @@
 //  - preview/site/header.html, preview/site/footer.html : en-tête et pied de page (vue membre) ;
 //  - preview/site/widgets/<widget>.<largeur>.html : slider et widgets dynamiques du tableau de bord
 //    de l'accueil, à trois largeurs (Vue génère un balisage différent selon la largeur) ;
-//  - preview/site/widgets/widgets.json : liste et ordre des widgets tels qu'ils sont sur le site.
+//  - preview/site/widgets/widgets.json : liste et ordre des widgets tels qu'ils sont sur le site ;
+//  - preview/site/production/ : le contenu personnalisable actuellement en ligne, au même format que
+//    custom-af-content/ (custom.css, accueil.yaml, html-widget<n>.html, menus.yaml), pour comparer.
 // Tout est nettoyé : sans scripts, sans attributs Vue/JS, sans photo de profil ni mur social.
 //
 // Usage (depuis la racine du dépôt) :
@@ -17,6 +19,7 @@ const { chromium } = require('playwright-core');
 
 const ORIGIN = 'https://www.reso.co';
 const OUT = path.join(__dirname, '..', 'preview', 'site');
+const PROD = path.join(OUT, 'production');
 
 // Bug AlumnForce : un compte admin voit à la fois le menu des membres et celui des visiteurs.
 // Entrées du menu réservées aux visiteurs, retirées de la capture pour montrer le menu d'un membre.
@@ -153,7 +156,9 @@ async function loadLazyImages(page) {
     });
     return read(doc.querySelector('ul.nav:not(.nav-mobile)'));
   }, header);
-  fs.writeFileSync(path.join(OUT, 'menu-site.yaml'),
+  fs.mkdirSync(PROD, { recursive: true });
+  fs.writeFileSync(path.join(PROD, 'custom.css'), await page.evaluate(async () => (await fetch('/site/css/show')).text()));
+  fs.writeFileSync(path.join(PROD, 'menus.yaml'),
     '# Menu de reso.co (vue membre), capturé le ' + new Date().toISOString().slice(0, 10) +
     ' par tools/capture-site-chrome.js — ne pas modifier à la main.\n' +
     '# Pour essayer un autre menu dans l\'aperçu, modifier custom-af-content/menus.yaml (même format).\n' + toYaml(menu));
@@ -188,7 +193,12 @@ async function loadLazyImages(page) {
           t.querySelectorAll('.common-emoji').forEach(e => e.remove());
           title = t.textContent.replace(/\s+/g, ' ').trim();
         }
-        return { type, title, html: type === 'instance-layout-widget-html-content' ? null : clean(null, avatar, [], w) };
+        if (type === 'instance-layout-widget-html-content') {
+          // contenu du widget « html libre », tel qu'il a été collé dans AlumnForce
+          const r = w.querySelector('.richedit_wrap');
+          return { type, title, html: null, content: r ? r.innerHTML.trim() : '' };
+        }
+        return { type, title, html: clean(null, avatar, [], w) };
       });
       return { slider: slider ? clean(null, avatar, [], slider) : null, items };
     }, [cleanInPage.toString(), AVATAR]);
@@ -198,7 +208,11 @@ async function loadLazyImages(page) {
     // Même vocabulaire que custom-af-content/accueil.yaml : { widget: <nom> } ou { html: <rang> }
     let htmlCount = 0;
     const thisOrder = (found.slider ? [{ widget: 'slider' }] : []).concat(found.items.map(it => {
-      if (!it.html) return { html: 'widget « html libre » n° ' + (++htmlCount) };
+      if (!it.html) {
+        ++htmlCount;
+        if (bp === 'bureau') fs.writeFileSync(path.join(PROD, 'html-widget' + htmlCount + '.html'), it.content + '\n');
+        return { html: 'widget « html libre » n° ' + htmlCount };
+      }
       const slug = slugify(it.title || it.type);
       fs.writeFileSync(path.join(widgetsDir, slug + '.' + bp + '.html'), stamp + it.html + '\n');
       return { widget: slug, titre: it.title };
@@ -207,6 +221,12 @@ async function loadLazyImages(page) {
     console.log('Widgets ' + bp + ' (' + width + ' px) : ' + thisOrder.map(o => o.widget || o.html).join(', '));
     await ctx.close();
   }
+  // Accueil actuel, au format de custom-af-content/accueil.yaml
+  let n = 0;
+  fs.writeFileSync(path.join(PROD, 'accueil.yaml'),
+    '# Accueil des membres tel qu\'il est sur reso.co, capturé le ' + new Date().toISOString().slice(0, 10) +
+    ' par tools/capture-site-chrome.js — ne pas modifier à la main.\n' +
+    order.map(o => o.widget ? '- widget: ' + o.widget + '\n' : '- html: html-widget' + (++n) + '.html\n').join(''));
   fs.writeFileSync(path.join(widgetsDir, 'widgets.json'), JSON.stringify({
     capture: new Date().toISOString().slice(0, 10),
     largeurs: WIDTHS,

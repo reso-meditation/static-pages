@@ -1,0 +1,8 @@
+# Accueil des membres tel qu'il est sur reso.co, capturé le 2026-11-06 par tools/capture-site-chrome.js — ne pas modifier à la main.
+- widget: slider
+- html: html-widget1.html
+- widget: nos-prochaines-rencontres
+- widget: les-nouvelles-de-reso
+- widget: les-derniers-replays
+- widget: les-prochains-stages
+- widget: meditations-du-quotidien

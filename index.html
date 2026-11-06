@@ -16,9 +16,6 @@
     <nav>
       <ul id="page-list" class="page-list"></ul>
     </nav>
-    <footer class="sidebar-foot">
-      <button type="button" id="copy-css" class="link-btn">Copier custom.css</button>
-    </footer>
   </aside>
 
   <section class="workspace">
@@ -34,18 +31,33 @@
           <button type="button" data-w="768">Tablette</button>
           <button type="button" data-w="390">Mobile</button>
         </div>
-        <span id="copy-buttons" class="copy-buttons"></span>
-        <a id="open-alone" class="btn" target="_blank">Ouvrir seule</a>
+        <button type="button" id="compare" class="btn" aria-pressed="false" title="Deux réglages côte à côte (touche C)">◧ Comparer</button>
+        <button type="button" id="swap" class="btn" title="Échanger les réglages A et B (touche B)">⇄ Basculer</button>
+        <button type="button" id="toggle-panel" class="btn" aria-pressed="true" aria-controls="panel">⚙ Choix</button>
         <a id="open-live" class="btn" target="_blank" rel="noopener">Voir sur reso.co</a>
       </div>
     </div>
     <div id="warnings" class="warnings" hidden></div>
-    <div id="stage" class="stage">
-      <div id="frame-box" class="frame-box">
-        <iframe id="frame" title="Aperçu de la page"></iframe>
-      </div>
-    </div>
+    <div id="stage" class="stage"></div>
   </section>
+
+  <aside id="panel" class="panel" aria-label="Choix">
+    <div class="panel-head">
+      <strong>Choix</strong>
+      <span id="panel-hint" class="hint"></span>
+    </div>
+    <div id="choices" class="choices"></div>
+    <div class="panel-actions">
+      <button type="button" id="copy-summary" class="btn">Copier le résumé</button>
+      <button type="button" id="copy-link" class="btn">Copier le lien</button>
+      <button type="button" id="reset" class="link-btn">Réinitialiser</button>
+    </div>
+    <div class="panel-section">
+      <h2>À coller dans AlumnForce</h2>
+      <p class="hint">Contenu de la Proposition (custom-af-content/), sans les choix ci-dessus.</p>
+      <div id="copy-buttons" class="copy-list"></div>
+    </div>
+  </aside>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>

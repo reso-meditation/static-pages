@@ -4,11 +4,21 @@
   'use strict';
 
   var ORIGIN = 'https://www.reso.co';
-  // Contenu personnalisable du site, un fichier par formulaire AlumnForce.
-  var CONTENT = 'custom-af-content/';
   var params = new URLSearchParams(location.search);
   var pageId = params.get('page');
   var isLocal = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname);
+  // Version affichée : « proposition » (custom-af-content/, ce qu'on modifie) ou « production »
+  // (preview/site/production/, ce qui est en ligne, capturé par tools/capture-site-chrome.js).
+  var VERSION = params.get('version') === 'production' ? 'production' : 'proposition';
+  var PROPOSITION = 'custom-af-content/';
+  var CONTENT = VERSION === 'production' ? 'preview/site/production/' : PROPOSITION;
+  // Choix (preview/choix.yaml) retenus, ex. ?choix=palette:charte,fonds:aucune — Proposition seulement.
+  var CHOIX = {};
+  (params.get('choix') || '').split(',').forEach(function (c) {
+    var i = c.indexOf(':');
+    if (i > 0) CHOIX[c.slice(0, i)] = c.slice(i + 1);
+  });
+  var choix = { css: [], menus: [] };   // fichiers CSS et modifications du menu des réponses retenues
 
   var main = document.getElementById('main-content');
   var customCss = document.getElementById('custom-css');
@@ -60,13 +70,21 @@
   }
 
   function notify(payload) {
-    if (window.parent !== window) window.parent.postMessage(Object.assign({ source: 'reso-preview', page: pageId }, payload), '*');
+    if (window.parent !== window) window.parent.postMessage(Object.assign({ source: 'reso-preview', page: pageId, cote: params.get('cote') || 'a' }, payload), '*');
   }
 
   function fetchText(path) {
     return fetch(path, { cache: 'no-store' }).then(function (r) {
       if (!r.ok) throw new Error(path + ' : HTTP ' + r.status);
       return r.text();
+    });
+  }
+
+  // Production : un fichier non capturé (ex. une page statique) est pris dans custom-af-content/.
+  function fetchContent(path) {
+    return fetchText(path).catch(function (e) {
+      if (VERSION === 'production' && path.indexOf(CONTENT) === 0) return fetchText(PROPOSITION + path.slice(CONTENT.length));
+      throw e;
     });
   }
 
@@ -195,13 +213,15 @@
   }
 
   function load(entry) {
-    var widgetsText = entry.type === 'accueil' ? fetchText(CONTENT + entry.contenu) : Promise.resolve(null);
-    return Promise.all([fetchText(CONTENT + 'custom.css'), widgetsText]).then(function (r) {
+    var widgetsText = entry.type === 'accueil' ? fetchContent(CONTENT + entry.contenu) : Promise.resolve(null);
+    var choixCss = Promise.all(choix.css.map(function (f) { return fetchText(f).catch(function () { return ''; }); }));
+    return Promise.all([fetchContent(CONTENT + 'custom.css'), widgetsText, choixCss]).then(function (r) {
       var css = r[0];
+      applyChoixCss(r[2]);
       var widgets = entry.type === 'accueil' ? readWidgets(entry, r[1]) : [];
       var paths = htmlFiles(entry, widgets);
       return Promise.all([
-        Promise.all(paths.map(function (p) { return fetchText(p).catch(function () { return null; }); })),
+        Promise.all(paths.map(function (p) { return fetchContent(p).catch(function () { return null; }); })),
         loadCaptures(widgets, currentBreakpoint())
       ]).then(function (r2) {
         var files = {};
@@ -209,6 +229,69 @@
         render(entry, css, files, widgets);
       });
     });
+  }
+
+  // CSS des réponses retenues : un <style> par fichier (un @import doit être en tête de sa feuille),
+  // entre custom.css et le repère #choix-fin, avant les styles ajoutés par Vue (comme le serait
+  // ce CSS une fois intégré à custom.css).
+  var lastChoixCss = null;
+  function applyChoixCss(texts) {
+    var key = texts.join('\u0000');
+    if (key === lastChoixCss) return;
+    lastChoixCss = key;
+    document.querySelectorAll('style[data-choix]').forEach(function (e) { e.remove(); });
+    var end = document.getElementById('choix-fin');
+    texts.forEach(function (t, i) {
+      var st = document.createElement('style');
+      st.setAttribute('data-choix', choix.css[i]);
+      st.textContent = absolutize(t);
+      end.parentNode.insertBefore(st, end);
+    });
+    syncScrollableNav();
+  }
+
+  // Lit preview/choix.yaml et retient, pour chaque choix, la réponse demandée (sinon la première).
+  function loadChoix() {
+    if (VERSION === 'production') return Promise.resolve();
+    return fetchText('preview/choix.yaml').then(function (text) {
+      var r = yamlLoad(text, 'preview/choix.yaml');
+      if (r.error || !Array.isArray(r.value)) { warnings.menu.push(r.error || 'preview/choix.yaml : liste attendue'); return; }
+      r.value.forEach(function (q) {
+        var opts = q.options || [];
+        var o = opts.find(function (x) { return x.id === CHOIX[q.id]; }) || opts[0];
+        if (!o) return;
+        if (o.css) choix.css.push('preview/choix/' + o.css);
+        if (o.menus) choix.menus.push(o.menus);
+      });
+    }).catch(function () {});
+  }
+
+  // Applique au menu les modifications des réponses retenues (renommer, retirer), sur une copie.
+  function patchMenu(items) {
+    if (!choix.menus.length) return items;
+    var copy = JSON.parse(JSON.stringify(items));
+    function find(path) {
+      var parts = path.split('>').map(function (t) { return t.trim(); });
+      var list = copy, item = null, parent = null;
+      for (var i = 0; i < parts.length; i++) {
+        parent = list;
+        item = (list || []).find(function (it) { return it.titre === parts[i]; });
+        if (!item) return null;
+        list = item['sous-menu'];
+      }
+      return { item: item, list: parent };
+    }
+    choix.menus.forEach(function (m) {
+      Object.keys(m.renommer || {}).forEach(function (path) {
+        var f = find(path);
+        if (f) f.item.titre = m.renommer[path]; else warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + path + ' »');
+      });
+      (m.retirer || []).forEach(function (path) {
+        var f = find(path);
+        if (f) f.list.splice(f.list.indexOf(f.item), 1); else warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + path + ' »');
+      });
+    });
+    return copy;
   }
 
   // En-tête et pied de page de reso.co, capturés par tools/capture-site-chrome.js.
@@ -229,7 +312,7 @@
   // CSS chargés à la demande), capturées par tools/capture-site-chrome.js. Insérées au même endroit.
   function loadSiteStyles(entry) {
     return fetchText('preview/site/styles.' + entry.type + '.html')
-      .then(function (html) { customCss.parentNode.insertBefore(htmlNode(html), customCss.nextSibling); })
+      .then(function (html) { var end = document.getElementById('choix-fin'); end.parentNode.insertBefore(htmlNode(html), end.nextSibling); })
       .catch(function (e) { console.warn('Styles Vue indisponibles :', e.message); });
   }
 
@@ -346,8 +429,8 @@
           });
         })(items, 0);
         warnings.menu = bad.map(function (b) { return 'menus.yaml : ' + b; });
+        applyMenu(patchMenu(items.filter(function (it) { return it && it.titre; })));
         notifyWarnings();
-        applyMenu(items.filter(function (it) { return it && it.titre; }));
       })
       .catch(function (e) { console.warn('menus.yaml indisponible :', e.message); setupDropdowns(); });
   }
@@ -485,7 +568,9 @@
         bpName = currentBreakpoint().nom;
         load(entry).catch(function (e) { showError(e.message); });
       });
-      return Promise.all([loadSiteStyles(entry), loadSiteChrome(), load(entry)]).then(function () {
+      return loadChoix().then(function () {
+        return Promise.all([loadSiteStyles(entry), loadSiteChrome(), load(entry)]);
+      }).then(function () {
         // En local : rechargement automatique quand custom.css ou une page change.
         if (isLocal) setInterval(function () {
           load(entry).catch(function () {});

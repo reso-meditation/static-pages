@@ -1,0 +1,18 @@
+/* Palette 3 du document : couleurs des 5 catégories, teintes claires des fonds (35 %), couleur du texte. */
+:root {
+    --menu_etre_ensemble: #551800;
+    --menu_evenements: #D70900;
+    --menu_enseignements: #004680;
+    --menu_pratique: #FFD400;
+    --menu_chemin: #EBE4E0;
+    --menu_etre_ensemble_fond: #C4AEA6;
+    --menu_evenements_fond: #F1A9A6;
+    --menu_enseignements_fond: #A6BED3;
+    --menu_pratique_fond: #FFF0A6;
+    --menu_chemin_fond: #F8F6F4;
+    --menu_etre_ensemble_texte: #fff;
+    --menu_evenements_texte: #fff;
+    --menu_enseignements_texte: #fff;
+    --menu_pratique_texte: #000;
+    --menu_chemin_texte: #000;
+}
