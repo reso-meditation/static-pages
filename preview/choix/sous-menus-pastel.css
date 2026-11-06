@@ -1,7 +1,8 @@
 /* Sous-menus en cartes arrondies, sur le fond pastel de leur catégorie : la teinte des bandes de
    l'accueil (--menu_…_fond), deux fois plus légère (mélangée à 50 % avec le blanc en bureau, où le
    sous-menu flotte au-dessus de la page ; à 50 % de transparence en mobile, sur le panneau). AlumnForce déplace le sous-menu hors de son entrée au survol
-   (div.subContainer) : on le reconnaît au lien de sa catégorie, que porte sa première entrée.
+   (div.subContainer) : on le reconnaît à un lien qui lui est propre (celui de la catégorie, porté
+   par sa première entrée, ou pour Pratique au quotidien celui de « Méditations du quotidien »).
    En mobile, le sous-menu déplié reste dans son entrée. */
 
 /* -- Bureau : cartes arrondies (comme l'option « Cartes blanches arrondies ») -- */
@@ -41,7 +42,8 @@
     background-color: color-mix(in srgb, var(--menu_enseignements_fond) 50%, #fff);
 }
 #header .subContainer ul.dropdown-menu:has(> li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]),
-#header .subContainer ul.dropdown-menu:has(> li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]) ul.dropdown-menu {
+#header .subContainer ul.dropdown-menu:has(> li > a[href="/articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294"]) ul.dropdown-menu,
+#header .subContainer ul.dropdown-menu:has(> li > a[href="/articles/categories/292"]) {   /* liste unique : « Méditations du quotidien » */
     background-color: color-mix(in srgb, var(--menu_pratique_fond) 50%, #fff);
 }
 #header .subContainer ul.dropdown-menu:has(> li > a[href="/page/votre-chemin-dans-reso"]),

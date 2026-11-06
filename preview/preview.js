@@ -298,15 +298,24 @@
       }
       return { item: item, list: parent };
     }
+    // Un chemin qui commence par « ? » est facultatif : pas d'avertissement s'il n'existe pas
+    // (utile quand une autre réponse a déjà modifié cette partie du menu).
+    function each(paths, fn) {
+      paths.forEach(function (path) {
+        var optional = path.charAt(0) === '?';
+        var p = optional ? path.slice(1).trim() : path;
+        var f = find(p);
+        if (f) fn(f, p);
+        else if (!optional) warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + p + ' »');
+      });
+    }
     choix.menus.forEach(function (m) {
-      Object.keys(m.renommer || {}).forEach(function (path) {
-        var f = find(path);
-        if (f) f.item.titre = m.renommer[path]; else warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + path + ' »');
+      // remplacer : { "Catégorie": [ nouvelles entrées du sous-menu ] }
+      each(Object.keys(m.remplacer || {}), function (f, p) {
+        f.item['sous-menu'] = JSON.parse(JSON.stringify(m.remplacer[p] || m.remplacer['?' + p] || []));
       });
-      (m.retirer || []).forEach(function (path) {
-        var f = find(path);
-        if (f) f.list.splice(f.list.indexOf(f.item), 1); else warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + path + ' »');
-      });
+      each(Object.keys(m.renommer || {}), function (f, p) { f.item.titre = m.renommer[p] || m.renommer['?' + p]; });
+      each(m.retirer || [], function (f) { f.list.splice(f.list.indexOf(f.item), 1); });
     });
     return copy;
   }

@@ -92,30 +92,24 @@
 - titre: Pratique au quotidien
   lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
   sous-menu:
-    - titre: Pratiquer seul au quotidien
-      lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
-      sous-menu:
-        - titre: Méditations du quotidien
-          lien: /articles/categories/292
-        - titre: Pratiques de bienveillance
-          lien: /articles/categories/294
-        - titre: Méditations sur le corps
-          lien: /articles/categories/293
-        - titre: Méditations sur les émotions
-          lien: /articles/categories/296
-        - titre: Méditations sur la confiance
-          lien: /articles/categories/295
-        - titre: Méditations sur l'esprit
-          lien: /articles/categories/297
-        - titre: Méditations spécifiques
-          lien: /articles/categories/298
-        - titre: Timer
-          lien: https://www.reso.co/page/minuteur
-    - titre: Pratiquer ensemble au quotidien
+    - titre: Minuteur - pratiquer en silence
+      lien: https://www.reso.co/page/minuteur
+    - titre: Méditations du quotidien
+      lien: /articles/categories/292
+    - titre: Pratiques de bienveillance
+      lien: /articles/categories/294
+    - titre: Méditations sur le corps
+      lien: /articles/categories/293
+    - titre: Méditations sur les émotions
+      lien: /articles/categories/296
+    - titre: Méditations sur la confiance
+      lien: /articles/categories/295
+    - titre: Méditations sur l'esprit
+      lien: /articles/categories/297
+    - titre: Méditations spécifiques
+      lien: /articles/categories/298
+    - titre: Méditons ensemble
       lien: /page/activites-groupes
-      sous-menu:
-        - titre: Méditons ensemble
-          lien: /page/activites-groupes
 
 - titre: Votre chemin dans Reso
   lien: /page/votre-chemin-dans-reso

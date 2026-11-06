@@ -9,9 +9,12 @@
 #       couleurs:  (facultatif) pastilles affichées à côté du titre
 #       css:       (facultatif) fichier de preview/choix/, ajouté juste après custom.css
 #       menus:     (facultatif) modifications du menu (custom-af-content/menus.yaml) :
-#                    renommer: { "Catégorie > Entrée": "Nouveau titre" }
-#                    retirer:  [ "Catégorie > Entrée" ]
+#                    remplacer: { "Catégorie": [ entrées du sous-menu, au format de menus.yaml ] }
+#                    renommer:  { "Catégorie > Entrée": "Nouveau titre" }
+#                    retirer:   [ "Catégorie > Entrée" ]
 #                  Une entrée est désignée par les titres de ses parents et le sien, séparés par « > ».
+#                  Un chemin qui commence par « ? » est facultatif (pas d'avertissement s'il n'existe pas).
+#                  Les modifications s'appliquent dans l'ordre des questions de ce fichier.
 #
 # Une réponse retenue s'intègre ensuite à custom-af-content/ (custom.css, menus.yaml) :
 # en production, seul ce dossier compte.
@@ -60,6 +63,43 @@
       detail: Même teinte que la bande de la section sur l'accueil (bureau et mobile).
       css: sous-menus-pastel.css
 
+- id: pratique
+  question: Sous-menu « Pratique au quotidien »
+  options:
+    - id: liste
+      titre: Une seule liste
+      detail: Minuteur, les 7 catégories de méditation, Méditons ensemble.
+    - id: seul-ensemble
+      titre: Deux groupes, « Pratiquer seul » et « Pratiquer ensemble »
+      detail: Comme le document, avec un 3e niveau de menu.
+      menus:
+        remplacer:
+          "Pratique au quotidien":
+            - titre: Pratiquer seul au quotidien
+              lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
+              sous-menu:
+                - titre: Méditations du quotidien
+                  lien: /articles/categories/292
+                - titre: Pratiques de bienveillance
+                  lien: /articles/categories/294
+                - titre: Méditations sur le corps
+                  lien: /articles/categories/293
+                - titre: Méditations sur les émotions
+                  lien: /articles/categories/296
+                - titre: Méditations sur la confiance
+                  lien: /articles/categories/295
+                - titre: Méditations sur l'esprit
+                  lien: /articles/categories/297
+                - titre: Méditations spécifiques
+                  lien: /articles/categories/298
+                - titre: Timer
+                  lien: https://www.reso.co/page/minuteur
+            - titre: Pratiquer ensemble au quotidien
+              lien: /page/activites-groupes
+              sous-menu:
+                - titre: Méditons ensemble
+                  lien: /page/activites-groupes
+
 - id: meditons
   question: Où mettre « Méditons ensemble » ?
   options:
@@ -74,7 +114,8 @@
       titre: Seulement Être ensemble
       detail: Proposition de Benjamin Couchot.
       menus:
-        retirer: ["Pratique au quotidien > Pratiquer ensemble au quotidien"]
+        # selon la structure de Pratique au quotidien retenue plus haut
+        retirer: ["?Pratique au quotidien > Méditons ensemble", "?Pratique au quotidien > Pratiquer ensemble au quotidien"]
 
 - id: nom-chemin
   question: Nom de la 5e catégorie
