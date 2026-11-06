@@ -1,7 +1,8 @@
 /* Polices d'icônes du site, rechargées depuis des sources accessibles hors de reso.co (CORS).
    Mêmes noms de famille que sur le site : ces déclarations remplacent celles d'AlumnForce. */
 
-/* FontAF : icônes AlumnForce (déclarée dans le <head> des pages reso.co) */
+/* FontAF : icônes AlumnForce (déclarée dans le <head> des pages reso.co). Police propriétaire :
+   non versionnée, téléchargée par tools/capture-site-chrome.js (absente de l'aperçu publié). */
 @font-face {
   font-family: 'FontAF';
   font-style: normal;

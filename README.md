@@ -154,7 +154,10 @@ en production, seul `custom-af-content/` compte.
 - Les feuilles de style d'AlumnForce sont chargées **directement depuis reso.co**.
   L'aperçu suit donc les mises à jour de la plateforme.
 - reso.co bloque le chargement de ses polices depuis un autre domaine (CORS). Elles sont donc :
-  - copiées dans `preview/fonts/` : Lato, Montserrat et FontAF (icônes AlumnForce) ;
+  - copiées dans `preview/fonts/` : Lato et Montserrat (licence libre OFL) ;
+  - FontAF (icônes AlumnForce, police propriétaire) : téléchargée par le script de capture dans
+    `preview/fonts/af_font/`, non versionnée. Sans elle (aperçu publié), quelques icônes de
+    l'en-tête et du pied de page manquent (loupe, menu ☰, barre du bas, réseaux sociaux) ;
   - ou chargées depuis jsDelivr : Material Design Icons.
 - Les chemins absolus (`/medias/...`) du contenu et de `custom.css` pointent vers reso.co.
 - Le contenu est rendu dans les mêmes conteneurs que sur le site. Pour l'accueil, Vue change

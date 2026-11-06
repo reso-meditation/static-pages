@@ -2,3 +2,5 @@
 .DS_Store
 node_modules/
 *.docx
+# FontAF : police d icônes propriétaire d AlumnForce, téléchargée par tools/capture-site-chrome.js (non publiée)
+preview/fonts/af_font/

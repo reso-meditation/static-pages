@@ -115,6 +115,13 @@ async function loadLazyImages(page) {
   });
   const stamp = '<!-- Capturé sur ' + ORIGIN + ' le ' + new Date().toISOString().slice(0, 10) +
     ' par tools/capture-site-chrome.js — ne pas modifier à la main -->\n';
+  // FontAF, police d'icônes propriétaire d'AlumnForce : téléchargée pour l'aperçu local, non versionnée
+  const fontDir = path.join(__dirname, '..', 'preview', 'fonts', 'af_font');
+  fs.mkdirSync(fontDir, { recursive: true });
+  const font = await fetch(ORIGIN + '/templates/common/fonts/af_font/FontAF.woff');
+  if (font.ok) fs.writeFileSync(path.join(fontDir, 'FontAF.woff'), Buffer.from(await font.arrayBuffer()));
+  else console.warn('FontAF non téléchargée (HTTP ' + font.status + ')');
+
   const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 
   // 1. En-tête et pied de page
