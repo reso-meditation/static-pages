@@ -213,6 +213,16 @@ body.panel-closed .panel { display: none; }
 .hint { color: var(--muted); font-size: 12px; }
 .choices { padding: 0 8px; }
 .choice { border: 0; margin: 0; padding: 10px 8px; border-top: 1px solid var(--line); }
+.choice-group {
+  margin: 14px 0 0;
+  padding: 8px 8px 4px;
+  border-top: 2px solid var(--ink);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.choice-group + .choice { border-top: 0; }
 .choice:first-child { border-top: 0; }
 .choice legend { padding: 0; margin-bottom: 6px; font-weight: 600; font-size: 13px; }
 .choice-head { display: flex; gap: 0; margin: -2px 0 2px; font-size: 11px; color: var(--muted); }

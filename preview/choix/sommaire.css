@@ -1,0 +1,29 @@
+/* Sommaire de la page (widget html libre, preview/choix/sommaire.html) : des pilules qui mènent
+   aux sections (ancres #section-… sur les titres). À vérifier : l'éditeur d'AlumnForce doit
+   conserver les attributs id des titres. */
+html { scroll-behavior: smooth; }
+.reso-section { scroll-margin-top: 24px; }
+.reso-sommaire { display: flex; flex-wrap: wrap; gap: 8px; }
+.v-app .richedit_wrap a.reso-sommaire__lien,
+.richedit_wrap a.reso-sommaire__lien {
+    background-color: #fff;
+    border: 2px solid currentColor;
+    border-radius: 50px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 15px;
+    letter-spacing: .02em;
+    padding: 5px 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.richedit_wrap a.reso-sommaire__lien:hover { background-color: var(--color_yellow_light); }
+.richedit_wrap a.reso-sommaire__lien--etre-ensemble { color: var(--menu_etre_ensemble) !important; }
+.richedit_wrap a.reso-sommaire__lien--evenements { color: var(--menu_evenements) !important; }
+.richedit_wrap a.reso-sommaire__lien--enseignements { color: var(--menu_enseignements) !important; }
+.richedit_wrap a.reso-sommaire__lien--pratique { color: color-mix(in srgb, var(--menu_pratique) 85%, #000) !important; }
+@media (max-width: 599px) {
+    .reso-sommaire { flex-wrap: nowrap; overflow-x: auto; padding: 0 16px 4px; scrollbar-width: none; }
+    .reso-sommaire::-webkit-scrollbar { display: none; }
+    .v-app .richedit_wrap a.reso-sommaire__lien,
+    .richedit_wrap a.reso-sommaire__lien { flex: none; }
+}

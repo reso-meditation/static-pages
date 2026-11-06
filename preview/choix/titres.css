@@ -1,0 +1,9 @@
+/* Titres des widgets épurés : sans l'emoji (la pilule de section porte déjà l'information),
+   en Libre Baskerville comme les autres titres du site (police de secours : Georgia). */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable .common-emoji { display: none !important; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable h2.common-card-generic-title {
+    color: #212121 !important;
+    font-family: 'Libre Baskerville', Georgia, serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0;
+}

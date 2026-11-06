@@ -139,7 +139,15 @@
       return row('version', v.id, function (sd) { return state[sd].v === v.id; }, function () { return false; },
         v.titre, v.detail, null, function (sd) { state[sd].v = v.id; update(); });
     })));
+    var groupe = null;
     questions.forEach(function (q) {
+      if (q.groupe && q.groupe !== groupe) {   // titre de groupe (clé « groupe » dans choix.yaml)
+        groupe = q.groupe;
+        var h = document.createElement('h3');
+        h.className = 'choice-group';
+        h.textContent = groupe;
+        box.appendChild(h);
+      }
       box.appendChild(block(q.question, (q.options || []).map(function (o) {
         return row(q.id, o.id, function (sd) { return selected(state[sd], q) === o.id; },
           function (sd) { return state[sd].v === 'production'; },

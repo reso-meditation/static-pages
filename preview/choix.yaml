@@ -1,8 +1,9 @@
 # Choix à trancher (réunion de communication interne), proposés dans la visionneuse (panneau « Choix »).
-# Ils ne s'appliquent qu'à la version « Proposition » (custom-af-content/), pas à « Production ».
+# Ils s'appliquent aux versions « Proposition » et « Brouillon », pas à « Production ».
 #
 # Chaque choix :
 #   id:        identifiant (dans l'adresse de la visionneuse)
+#   groupe:    (facultatif) titre de groupe affiché au-dessus de la question dans le panneau
 #   question:  intitulé affiché
 #   options:   les réponses possibles ; la PREMIÈRE est celle de custom-af-content/ (par défaut)
 #     - id, titre, detail (facultatif)
@@ -13,13 +14,18 @@
 #                    renommer:  { "Catégorie > Entrée": "Nouveau titre" }
 #                    retirer:   [ "Catégorie > Entrée" ]
 #                  Une entrée est désignée par les titres de ses parents et le sien, séparés par « > ».
-#                  Un chemin qui commence par « ? » est facultatif (pas d'avertissement s'il n'existe pas).
-#                  Les modifications s'appliquent dans l'ordre des questions de ce fichier.
+#       accueil:   (facultatif) modifications de l'accueil (custom-af-content/accueil.yaml) :
+#                    retirer:   [ réf ]                         réf : nom du widget (slider…) ou fichier html
+#                    remplacer: { réf: "preview/choix/….html" }  autre contenu d'un widget « html libre »
+#                    ajouter:   [ { html: "preview/choix/….html", titre, avant: réf | apres: réf } ]
+#   Un chemin ou une réf qui commence par « ? » est facultatif (pas d'avertissement s'il n'existe pas).
+#   Les CSS s'empilent, et les modifications s'appliquent, dans l'ordre des questions de ce fichier.
 #
-# Une réponse retenue s'intègre ensuite à custom-af-content/ (custom.css, menus.yaml) :
-# en production, seul ce dossier compte.
+# Une réponse retenue s'intègre ensuite à custom-af-content/ (custom.css, menus.yaml, accueil.yaml,
+# widgets html) : en production, seul ce dossier compte.
 
 - id: palette
+  groupe: Couleurs
   question: Couleurs des catégories
   options:
     - id: maquette
@@ -39,16 +45,8 @@
       couleurs: ["#551800", "#D70900", "#004680", "#FFD400", "#EBE4E0"]
       css: palette-3.css
 
-- id: lisere
-  question: Liseré coloré à gauche des cartes
-  options:
-    - id: oui
-      titre: Avec liseré
-    - id: non
-      titre: Sans liseré
-      css: sans-lisere.css
-
 - id: sous-menus
+  groupe: Menu
   question: Style des sous-menus
   options:
     - id: alumnforce
@@ -64,6 +62,7 @@
       css: sous-menus-pastel.css
 
 - id: pratique
+  groupe: Menu
   question: Sous-menu « Pratique au quotidien »
   options:
     - id: liste
@@ -101,6 +100,7 @@
                   lien: /page/activites-groupes
 
 - id: meditons
+  groupe: Menu
   question: Où mettre « Méditons ensemble » ?
   options:
     - id: les-deux
@@ -118,6 +118,7 @@
         retirer: ["?Pratique au quotidien > Méditons ensemble", "?Pratique au quotidien > Pratiquer ensemble au quotidien"]
 
 - id: nom-chemin
+  groupe: Menu
   question: Nom de la 5e catégorie
   options:
     - id: votre-chemin
@@ -128,7 +129,169 @@
       menus:
         renommer: { "Votre chemin dans Reso": "Se repérer dans Reso" }
 
+- id: lisere
+  groupe: Cartes et widgets
+  question: Liseré coloré à gauche des cartes
+  options:
+    - id: oui
+      titre: Avec liseré
+    - id: non
+      titre: Sans liseré
+      css: sans-lisere.css
+
+- id: survol
+  groupe: Cartes et widgets
+  question: Cartes au survol (bureau)
+  options:
+    - id: non
+      titre: Sans effet
+    - id: oui
+      titre: La carte s'élève, l'image zoome
+      detail: Légère ombre et montée de 3 px au passage de la souris.
+      css: survol.css
+
+- id: etiquettes
+  groupe: Cartes et widgets
+  question: Étiquettes des cartes
+  options:
+    - id: alumnforce
+      titre: Couleurs d'AlumnForce
+      detail: Violet, bleu, rouge selon la catégorie d'article ; dates en vert.
+    - id: section
+      titre: Couleur de la section
+      detail: Étiquettes et dates prennent la couleur de leur section.
+      css: etiquettes.css
+
+- id: voir-tout
+  groupe: Cartes et widgets
+  question: Lien « Voir tout »
+  options:
+    - id: lien
+      titre: Lien gris
+    - id: bouton
+      titre: Petit bouton pilule de la couleur de la section
+      css: voir-tout.css
+
+- id: titres
+  groupe: Cartes et widgets
+  question: Titres des widgets
+  options:
+    - id: emojis
+      titre: Avec emoji (📆 💡 🎬 🌻)
+    - id: epures
+      titre: Sans emoji, en Libre Baskerville
+      detail: À combiner avec « Polices corrigées » (sinon Georgia).
+      css: titres.css
+
+- id: carrousels
+  groupe: Cartes et widgets
+  question: Carrousels sur mobile et tablette
+  options:
+    - id: alumnforce
+      titre: Défilement libre (actuel)
+    - id: cales
+      titre: Cartes calées, sans barre de défilement
+      detail: Chaque carte se cale au bord en fin de geste, comme dans les applications.
+      css: carrousels.css
+
+- id: vides
+  groupe: Cartes et widgets
+  question: Widget dynamique vide
+  options:
+    - id: affiche
+      titre: Affiché (titre seul)
+    - id: masque
+      titre: Masqué
+      detail: "À vérifier sur le vrai site : l'aperçu n'a pas de widget vide."
+      css: widgets-vides.css
+
+- id: bandeau
+  groupe: Nouveaux blocs sur l'accueil
+  question: Haut de page
+  options:
+    - id: slider
+      titre: Slider d'AlumnForce (annonces qui défilent)
+    - id: bandeau
+      titre: Bandeau d'accueil fixe
+      detail: Illustration de l'accueil public ; les annonces du slider disparaissent.
+      css: bandeau.css
+      accueil:
+        retirer: [slider]
+        ajouter:
+          - html: preview/choix/bandeau.html
+            titre: Bandeau d'accueil
+            avant: html-widget1.html
+
+- id: raccourcis
+  groupe: Nouveaux blocs sur l'accueil
+  question: Raccourcis en haut de page
+  options:
+    - id: non
+      titre: Sans
+    - id: oui
+      titre: "Tuiles : Agenda, Replays, Minuteur, Groupe de partage, Annuaire, Programme"
+      css: raccourcis.css
+      accueil:
+        ajouter:
+          - html: preview/choix/raccourcis.html
+            titre: Raccourcis
+            avant: html-widget1.html
+
+- id: sommaire
+  groupe: Nouveaux blocs sur l'accueil
+  question: Sommaire de la page
+  options:
+    - id: non
+      titre: Sans
+    - id: oui
+      titre: Pilules qui mènent à chaque section
+      detail: "À vérifier : AlumnForce doit conserver les id des titres."
+      css: sommaire.css
+      accueil:
+        ajouter:
+          - html: preview/choix/sommaire.html
+            titre: Sommaire
+            avant: html-widget1.html
+
+- id: intros
+  groupe: Nouveaux blocs sur l'accueil
+  question: Phrase d'introduction sous chaque titre de section
+  options:
+    - id: non
+      titre: Sans
+    - id: oui
+      titre: Avec une phrase (textes à reformuler)
+      css: intro.css
+      accueil:
+        remplacer:
+          html-widget1.html: preview/choix/intro/html-widget1.html
+          html-widget2.html: preview/choix/intro/html-widget2.html
+          html-widget3.html: preview/choix/intro/html-widget3.html
+          html-widget5.html: preview/choix/intro/html-widget5.html
+
+- id: motif
+  groupe: Nouveaux blocs sur l'accueil
+  question: Motif de la charte
+  options:
+    - id: non
+      titre: Sans
+    - id: asterisque
+      titre: Astérisque ✳ du logo, en filigrane sur chaque section
+      css: motif.css
+
+- id: colonnes
+  groupe: Mise en page
+  question: Disposition des widgets (bureau)
+  options:
+    - id: une
+      titre: Une colonne
+    - id: deux
+      titre: Agendas côte à côte (Rencontres et Stages)
+      detail: "À vérifier sur le vrai site : les cartes d'AlumnForce sont prévues pour la pleine largeur."
+      css: deux-colonnes.css
+
 - id: polices
+  groupe: Tout le site
   question: Polices du site
   options:
     - id: actuelles
@@ -138,3 +301,14 @@
       titre: Inter et Libre Baskerville, comme prévu
       detail: Touche tout le site, pas seulement l'accueil.
       css: polices-corrigees.css
+
+- id: accessibilite
+  groupe: Tout le site
+  question: Accessibilité
+  options:
+    - id: actuelle
+      titre: Actuelle
+    - id: renforcee
+      titre: Texte noir sur l'orange, contour visible au clavier
+      detail: "Le blanc sur l'orange a un contraste d'environ 2:1 (minimum recommandé : 4,5:1)."
+      css: accessibilite.css

@@ -1,0 +1,47 @@
+/* Bloc « Raccourcis » (widget html libre, preview/choix/raccourcis.html) : des tuiles avec icône
+   (Material Design Icons, déjà chargée par AlumnForce) vers les pages les plus utilisées.
+   Bureau : une ligne de 6 tuiles ; mobile : une ligne qui défile horizontalement. */
+.reso-raccourcis {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(6, 1fr);
+}
+.v-app .richedit_wrap a.reso-raccourci,
+.richedit_wrap a.reso-raccourci {
+    align-items: center;
+    background-color: #fff;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+    color: #212121 !important;
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    gap: 6px;
+    line-height: 1.25;
+    padding: 16px 8px 14px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.richedit_wrap a.reso-raccourci:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, .14); transform: translateY(-2px); }
+.reso-raccourci i { font-size: 30px; line-height: 1; }
+.reso-raccourci--etre-ensemble i { color: var(--menu_etre_ensemble); }
+.reso-raccourci--evenements i { color: var(--menu_evenements); }
+.reso-raccourci--enseignements i { color: var(--menu_enseignements); }
+.reso-raccourci--pratique i { color: color-mix(in srgb, var(--menu_pratique) 85%, #000); }
+.reso-raccourci--chemin i { color: color-mix(in srgb, var(--menu_chemin) 40%, #000); }
+@media (max-width: 959px) {
+    .reso-raccourcis { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 599px) {
+    .reso-raccourcis {
+        display: flex;
+        overflow-x: auto;
+        padding: 4px 16px 8px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+    .reso-raccourcis::-webkit-scrollbar { display: none; }
+    .v-app .richedit_wrap a.reso-raccourci,
+    .richedit_wrap a.reso-raccourci { flex: 0 0 104px; scroll-snap-align: start; }
+}

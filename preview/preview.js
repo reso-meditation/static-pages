@@ -32,7 +32,7 @@
     var i = c.indexOf(':');
     if (i > 0) CHOIX[c.slice(0, i)] = c.slice(i + 1);
   });
-  var choix = { css: [], menus: [] };   // fichiers CSS et modifications du menu des réponses retenues
+  var choix = { css: [], menus: [], accueil: [] };   // CSS, modifications du menu et de l'accueil des réponses retenues
 
   var main = document.getElementById('main-content');
   var customCss = document.getElementById('custom-css');
@@ -135,15 +135,48 @@
     list.forEach(function (w, i) {
       if (w.widget === 'slider' && i > 0) bad.push(file + ' : le slider est toujours en tête sur reso.co (affiché en premier).');
     });
+    list = patchWidgets(list, bad);
     warnings.widgets = bad;
     lastWidgets.list = list;
     return list;
   }
 
+  // Modifications de l'accueil par les réponses retenues (preview/choix.yaml, clé « accueil ») :
+  //   retirer:   [ réf ]                          réf : nom du widget (slider…) ou fichier html (html-widget2.html)
+  //   remplacer: { réf: "preview/choix/….html" }  autre contenu pour un widget « html libre »
+  //   ajouter:   [ { html: "preview/choix/….html", titre, apres: réf | avant: réf } ]  (sans réf : à la fin)
+  // Une réf qui commence par « ? » est facultative (pas d'avertissement si elle est absente).
+  function patchWidgets(list, bad) {
+    function ref(w) { return w.widget || w.html; }
+    function index(r) {
+      var optional = r.charAt(0) === '?';
+      var name = optional ? r.slice(1).trim() : r;
+      var i = list.findIndex(function (w) { return ref(w) === name; });
+      if (i < 0 && !optional) bad.push('preview/choix.yaml : widget introuvable dans l\'accueil « ' + name + ' »');
+      return i;
+    }
+    choix.accueil.forEach(function (a) {
+      (a.retirer || []).forEach(function (r) { var i = index(r); if (i >= 0) list.splice(i, 1); });
+      Object.keys(a.remplacer || {}).forEach(function (r) {
+        var i = index(r);
+        if (i >= 0) list[i] = { html: a.remplacer[r], titre: list[i].titre };
+      });
+      (a.ajouter || []).forEach(function (n) {
+        var w = { html: n.html, titre: n.titre };
+        if (n.apres) { var i = index(n.apres); list.splice(i >= 0 ? i + 1 : list.length, 0, w); }
+        else if (n.avant) { var j = index(n.avant); list.splice(j >= 0 ? j : list.length, 0, w); }
+        else list.push(w);
+      });
+    });
+    return list;
+  }
+  // Fichier d'un widget « html libre » : dans custom-af-content/, ou dans preview/choix/ (réponses)
+  function htmlPath(w) { return /^preview\//.test(w.html) ? w.html : CONTENT + w.html; }
+
   // Fichiers HTML de custom-af-content/ qui composent la page.
   function htmlFiles(entry, widgets) {
     if (entry.type === 'accueil') {
-      return widgets.filter(function (w) { return w.html; }).map(function (w) { return CONTENT + w.html; });
+      return widgets.filter(function (w) { return w.html; }).map(htmlPath);
     }
     return [CONTENT + entry.contenu];
   }
@@ -188,7 +221,7 @@
       item.className = i === 0 ? 'is-draggable' : 'mt-6 is-draggable';
       if (w.html) {
         var widget = document.getElementById('tpl-widget-html').content.cloneNode(true);
-        widget.querySelector('[data-slot]').appendChild(htmlNode(files[CONTENT + w.html]));
+        widget.querySelector('[data-slot]').appendChild(htmlNode(files[htmlPath(w)]));
         item.appendChild(widget);
       } else {
         var html = captures[w.widget + '.' + bp.nom];
@@ -279,6 +312,7 @@
         if (!o) return;
         if (o.css) choix.css.push('preview/choix/' + o.css);
         if (o.menus) choix.menus.push(o.menus);
+        if (o.accueil) choix.accueil.push(o.accueil);
       });
     }).catch(function () {});
   }
@@ -600,6 +634,11 @@
     if (!a) return;
     var href = a.getAttribute('href');
     var logo = a.querySelector('img.header-dump');
+    // Ancre dans la page (ex. sommaire : #section-evenements) : défilement doux jusqu'à la section
+    if (/^#./.test(href)) {
+      var anchor = document.getElementById(decodeURIComponent(href.slice(1)));
+      if (anchor) { e.preventDefault(); anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    }
     var path = logo ? '/' : (/^(javascript:|#)/.test(href) ? null : pathOf(href));
     if (path === null) {
       if (/^(javascript:|#)/.test(href)) e.preventDefault();   // boutons de l'en-tête : rien à ouvrir

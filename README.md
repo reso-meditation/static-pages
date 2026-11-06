@@ -165,8 +165,14 @@ et, sauf pour la Production, d'une réponse à chaque choix. Par défaut : A = P
 question est la proposition actuelle (`custom-af-content/`). Une réponse peut :
 - ajouter un fichier CSS de `preview/choix/` juste après `custom.css` (palettes : variables
   `--menu_…` ; options : règles qui remplacent celles de `custom.css`) ;
-- modifier le menu : `renommer` ou `retirer` des entrées, désignées par leur chemin
-  (`"Être ensemble > Méditons ensemble"`). Les réponses de plusieurs questions se combinent.
+- modifier le menu : `remplacer` le sous-menu d'une catégorie, `renommer` ou `retirer` des
+  entrées, désignées par leur chemin (`"Être ensemble > Méditons ensemble"`) ;
+- modifier l'accueil : `ajouter` un widget « html libre » (fichier de `preview/choix/`, avant ou
+  après un widget existant), `remplacer` le contenu d'un widget, `retirer` un widget (ex. le slider).
+
+Les réponses de plusieurs questions se combinent, dans l'ordre du fichier. Une clé `groupe`
+regroupe les questions sous un titre dans le panneau. Le format complet est rappelé en tête de
+`preview/choix.yaml`.
 
 Une réponse retenue en réunion s'intègre ensuite dans `custom-af-content/` (CSS dans
 `custom.css`, menu dans `menus.yaml`) et devient la première réponse de sa question :

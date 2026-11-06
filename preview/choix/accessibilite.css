@@ -1,0 +1,11 @@
+/* Accessibilité : texte noir sur l'orange de Pratique au quotidien (le blanc donne un contraste
+   d'environ 2:1, il faut au moins 4,5:1), et contour bien visible pour la navigation au clavier. */
+:root { --menu_pratique_texte: #000; }
+#header a:focus-visible,
+#footer a:focus-visible,
+[data-tag-id="app"] a:focus-visible,
+[data-tag-id="app"] button:focus-visible {
+    border-radius: 4px;
+    outline: 3px solid var(--color_blue) !important;
+    outline-offset: 2px;
+}

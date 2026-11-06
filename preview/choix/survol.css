@@ -1,0 +1,25 @@
+/* Cartes au survol (bureau) : la carte de l'élément s'élève légèrement et prend une ombre ;
+   l'image zoome doucement. Une ombre blanche de 8 px élargit la carte sans changer la mise en page. */
+@media (hover: hover) {
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"] > [data-tag-id="card-vertical"] {
+        border-radius: 10px;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"]:hover > [data-tag-id="card-vertical"] {
+        box-shadow: 0 0 0 8px #fff, 0 10px 26px 8px rgba(0, 0, 0, .12) !important;
+        transform: translateY(-3px);
+    }
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"] .v-image__image {
+        transition: transform .5s ease;
+    }
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"]:hover .v-image__image {
+        transform: scale(1.05);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"] > [data-tag-id="card-vertical"],
+    [data-tag-id="instance-layout-user-dashboard"] .is-draggable a[data-tag-id="hyperlink"] .v-image__image {
+        transform: none !important;
+        transition: none !important;
+    }
+}

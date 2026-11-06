@@ -1,0 +1,13 @@
+/* Étiquettes aux couleurs de la section : catégorie posée sur l'image (« Actualités »,
+   « Cycles en cours - Replay »…) et date des événements. La couleur d'AlumnForce est écrite
+   dans l'élément (style), d'où les !important. */
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable .v-image .v-chip:not(.common-chip) {
+    background-color: var(--section) !important;
+    border-color: var(--section) !important;
+    color: var(--section-texte, #fff) !important;
+}
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable .v-image .v-chip:not(.common-chip) .v-chip__content { color: inherit !important; }
+[data-tag-id="instance-layout-user-dashboard"] .is-draggable .common-chip[data-tag-id="agenda-publishing-occurrence-date"] {
+    background-color: color-mix(in srgb, var(--section) 12%, #fff) !important;
+    color: color-mix(in srgb, var(--section) 80%, #000) !important;
+}

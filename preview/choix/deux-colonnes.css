@@ -1,0 +1,26 @@
+/* Bureau : deux colonnes pour les widgets d'agenda (Prochaines rencontres et Prochains stages
+   côte à côte, même hauteur). Les autres widgets restent en pleine largeur.
+   À vérifier sur le vrai site : les cartes d'AlumnForce sont prévues pour la pleine largeur. */
+@media (min-width: 960px) {
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] {
+        column-gap: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 24px;
+    }
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable {
+        grid-column: 1 / -1;
+        margin-top: 0 !important;
+    }
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(> [data-tag-id="agenda-publishing-widget-upcoming-occurrences"]) {
+        grid-column: auto;
+    }
+    /* bandes de fond des demi-widgets : chacune ne s'étend que vers l'extérieur (sinon celle de droite,
+       dessinée après, recouvre le widget de gauche) et elles se rejoignent dans l'espace du milieu */
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(> [data-tag-id="agenda-publishing-widget-upcoming-occurrences"]):not(.is-draggable:has(> [data-tag-id="agenda-publishing-widget-upcoming-occurrences"]) + *)::before { clip-path: inset(0 -13px 0 -100vmax); }
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(> [data-tag-id="agenda-publishing-widget-upcoming-occurrences"]) + .is-draggable:has(> [data-tag-id="agenda-publishing-widget-upcoming-occurrences"])::before { clip-path: inset(0 -100vmax 0 -13px); }
+    /* même espace qu'en une colonne avant la section suivante (24 + 24 = 48 px) */
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(+ .is-draggable .reso-section) {
+        margin-bottom: 24px !important;
+    }
+}

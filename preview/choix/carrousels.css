@@ -1,0 +1,12 @@
+/* Carrousels (mobile et tablette) : chaque carte se cale au bord en fin de défilement,
+   barre de défilement masquée, la carte suivante dépasse (largeur 80 % d'AlumnForce). */
+@media (max-width: 959px) {
+    [data-tag-id="instance-layout-user-dashboard"] .slides-container {
+        overscroll-behavior-x: contain;
+        scroll-padding-left: 16px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+    [data-tag-id="instance-layout-user-dashboard"] .slides-container::-webkit-scrollbar { display: none; }
+    [data-tag-id="instance-layout-user-dashboard"] .slides-container > * { scroll-snap-align: start; }
+}

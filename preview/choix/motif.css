@@ -1,0 +1,20 @@
+/* Motif de la charte : l'astérisque du logo Reso, en grand et en filigrane blanc à droite de chaque
+   titre de section, à cheval sur le bord de la bande. Le widget du titre passe au-dessus du
+   suivant (z-index) pour que le motif ne soit pas recouvert par la bande suivante. */
+[data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(.reso-section) { z-index: 1; }
+[data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(.reso-section)::after {
+    color: #fff;
+    content: "✳";
+    font-family: Georgia, serif;
+    font-size: 84px;
+    line-height: 1;
+    opacity: .7;
+    pointer-events: none;
+    position: absolute;
+    right: 2%;
+    top: calc(var(--reso-pill-h) / 2 - 42px);
+    z-index: -1;
+}
+@media (max-width: 599px) {
+    [data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(.reso-section)::after { font-size: 64px; right: 16px; top: calc(var(--reso-pill-h) / 2 - 32px); }
+}

@@ -1,0 +1,6 @@
+/* Masquer un widget dynamique vide (ex. plus d'événement à venir) : un widget sans aucun élément
+   (lien a[data-tag-id="hyperlink"]) disparaît. À vérifier sur le vrai site avec un widget vide :
+   l'aperçu n'en contient pas. Sa section, elle, reste (titre en pilule). */
+[data-tag-id="instance-layout-user-dashboard"] [data-tag-id="draggable"] > .is-draggable:has(.common-card-generic):not(:has(a[data-tag-id="hyperlink"])) {
+    display: none;
+}
