@@ -310,7 +310,7 @@
     $('compare').setAttribute('aria-pressed', String(state.cmp));
     $('toggle-panel').setAttribute('aria-pressed', String(state.panel));
     document.body.classList.toggle('panel-closed', !state.panel);
-    $('page-title').textContent = entry.titre;
+    $('page-select').value = entry.id;
     $('page-type').textContent = TYPES[entry.type] || entry.type;
     $('open-live').href = entry.url || 'https://www.reso.co/';
     document.title = entry.titre + ' · Pages Reso';
@@ -357,9 +357,19 @@
   ]).then(function (r) {
     pages = window.jsyaml.load(r[0]) || [];
     questions = (window.jsyaml.load(r[1]) || []).filter(function (q) { return q && q.id && q.options && q.options.length; });
+    // Menu déroulant des pages (preview/pages.yaml) ; on peut aussi changer de page par le menu du site
+    var select = $('page-select');
+    pages.forEach(function (p) {
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.titre;
+      select.appendChild(o);
+    });
+    select.addEventListener('change', function () { state.page = select.value; update(); });
     readHash();
     update();
   }).catch(function (e) {
-    $('page-title').textContent = 'preview/pages.yaml ou preview/choix.yaml illisible : ' + e.message;
+    warnings.a = ['preview/pages.yaml ou preview/choix.yaml illisible : ' + e.message];
+    showWarnings();
   });
 })();
