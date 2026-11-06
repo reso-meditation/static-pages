@@ -2,7 +2,7 @@
 <!--
   Rendu d'UNE page dans un contexte qui imite reso.co :
   mêmes feuilles de style AlumnForce (chargées depuis reso.co), puis custom.css,
-  puis le fragment HTML de pages/<id>.html placé dans les mêmes conteneurs que sur le site.
+  puis le contenu de custom-af-content/ placé dans les mêmes conteneurs que sur le site.
   Usage : preview.html?page=<id>
 -->
 <html lang="fr" class="userbar-is-active user-is-login no-touchevents">
@@ -51,7 +51,7 @@
   </template>
 
   <!-- Tableau de bord de l'accueil, relevé sur https://www.reso.co/ :
-       le slider, puis la suite de widgets déplaçables (data-widgets), décrite dans pages/pages.json.
+       le slider, puis la suite de widgets déplaçables (data-widgets), décrite dans custom-af-content/accueil.yaml.
        Vue change les classes selon la largeur (data-bp) : voir BREAKPOINTS dans preview/preview.js -->
   <template id="tpl-accueil">
     <div class="v-app" data-tag-id="app">
@@ -89,6 +89,8 @@
     </div>
   </template>
 
+  <!-- Lecture des fichiers YAML (outil d'aperçu uniquement) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
   <script src="preview/preview.js"></script>
 </body>
 </html>

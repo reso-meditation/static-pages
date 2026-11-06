@@ -6,46 +6,83 @@ avec un outil d'aperçu qui reproduit le rendu du site.
 AlumnForce n'exécute aucun JavaScript dans ces contenus : on n'y met que du HTML,
 stylé par le CSS global du site.
 
-## Contenu
+## `custom-af-content/` : le contenu personnalisable
 
-| Chemin | Rôle | Où le coller dans AlumnForce |
+Tout ce qui se personnalise dans AlumnForce, **un fichier par formulaire du back-office** :
+
+| Fichier | Formulaire AlumnForce | Ce qu'on en fait |
 |---|---|---|
-| `custom.css` | CSS global du site, **partagé par toutes les pages** | Éditeur CSS du site (servi sur `/site/css/show`) |
-| `pages/*.html` | Fragment HTML d'une page statique, ou d'un widget « html libre » de l'accueil | Page statique / widget « html libre » |
-| `pages/pages.json` | Liste des pages affichées dans l'aperçu | — |
-| `preview/site/` | Captures de reso.co : en-tête, pied de page, widgets dynamiques, styles Vue | — (généré par `tools/`) |
-| `index.html`, `preview.html`, `preview/` | Outil d'aperçu (pas à coller) | — |
+| `custom.css` | Éditeur CSS du site (servi sur `/site/css/show`) | Coller tel quel. **Partagé par toutes les pages** |
+| `accueil.yaml` | Configuration du tableau de bord (page d'accueil des membres) | Reproduire la liste des widgets, dans l'ordre |
+| `html-widget1.html` | Widget « html libre » n° 1 de l'accueil | Coller tel quel |
+| `minuteur.html` | Page statique « Minuteur » | Coller tel quel |
+| `menus.yaml` | Gestion du menu (menu principal et sous-menus) | Reproduire les entrées |
 
-Chaque entrée de `pages/pages.json` a un `id`, un `titre`, un `type` et l'`url` de la page sur reso.co.
+Pour un nouveau widget « html libre », créer `html-widget2.html` et l'ajouter à `accueil.yaml`.
+Pour une nouvelle page statique, créer `<nom>.html` et l'ajouter à `preview/pages.yaml`.
 
-**Page statique** (`"type": "page-statique"`) : le fragment est `pages/<id>.html`.
+### `accueil.yaml` : les widgets de l'accueil
 
-```json
-{ "id": "minuteur", "titre": "Minuteur", "type": "page-statique", "url": "https://www.reso.co/page/minuteur" }
+La liste des widgets du tableau de bord, dans l'ordre, slider compris :
+
+```yaml
+- widget: slider
+- html: html-widget1.html
+  titre: Bandeau groupe de partage
+- widget: nos-prochaines-rencontres
 ```
 
-**Accueil** (`"type": "accueil"`) : le tableau de bord membre, décrit comme sur le site,
-c'est-à-dire le slider (optionnel) puis une **suite de widgets**, dans l'ordre :
+- `widget: <nom>` : widget dynamique d'AlumnForce (slider, agenda, articles…), rendu à partir de
+  sa capture sur reso.co (`preview/site/widgets/<nom>.<largeur>.html`). Les noms disponibles et
+  l'ordre actuel sur le site sont dans `preview/site/widgets/widgets.json`. Le slider est toujours
+  en tête : sur reso.co, AlumnForce le place au-dessus des autres widgets.
+- `html: <fichier>.html` : widget « html libre », fichier de ce dossier. `titre` (facultatif) est le
+  nom affiché sur son bouton de copie dans la visionneuse.
 
-```json
-{
-  "id": "accueil-membres", "titre": "Accueil membres", "type": "accueil", "url": "https://www.reso.co/",
-  "slider": true,
-  "widgets": [
-    { "html": "pages/accueil-membres.html", "titre": "Bandeau groupe de partage" },
-    { "capture": "nos-prochaines-rencontres" }
-  ]
-}
+Pour essayer un nouvel agencement, réordonner la liste ou y insérer des widgets « html libre ».
+
+### `menus.yaml` : le menu
+
+L'aperçu génère le menu de l'en-tête (bureau et mobile) à partir de ce fichier, avec le
+balisage d'AlumnForce. Au départ, c'est une copie du menu actuel du site, capturé dans
+`preview/site/menu-site.yaml` (même format) : comparer les deux montre les changements à faire
+dans le back-office.
+
+```yaml
+- titre: Être ensemble
+  lien: /page/comment-etre-ensemble-dans-reso
+  sous-menu:
+    - titre: Annuaire des membres
+      lien: /addressbook/fullsearch/index
+- titre: Timer
+  lien: https://www.reso.co/page/minuteur
 ```
 
-- `{ "html": "pages/….html", "titre": "…" }` : widget « html libre », dont le contenu est versionné ici.
-  La visionneuse affiche un bouton de copie par widget de ce type.
-- `{ "capture": "…" }` : widget dynamique d'AlumnForce (agenda, articles…), rendu à partir de sa
-  capture `preview/site/widgets/<nom>.<largeur>.html`. La liste des widgets capturés et leur ordre
-  sur le site sont dans `preview/site/widgets/widgets.json`.
+- `titre`, `lien` : texte et cible de l'entrée. Une URL complète (`https://…`) correspond à une
+  entrée « lien externe » d'AlumnForce, dont le balisage diffère un peu : l'aperçu le reproduit.
+- `sous-menu` (facultatif) : liste d'entrées, sur trois niveaux au plus, comme sur le site.
 
-Pour essayer un nouvel agencement, il suffit de réordonner `widgets` ou d'y insérer des
-widgets « html libre ».
+Pour cibler une entrée dans `custom.css`, utiliser son **lien**, identique dans l'aperçu et sur
+le site. Les identifiants d'AlumnForce (`<li id="submenu-785">`) sont des numéros attribués à la
+création de l'entrée : inconnus pour une nouvelle entrée, ils ne figurent donc pas dans
+`menus.yaml`, et l'aperçu fabrique les siens à partir du titre.
+
+```css
+/* Entrée « Être ensemble » du menu bureau (le « > » évite son sous-menu, qui a le même lien) */
+#header ul.nav > li > a[href="/page/comment-etre-ensemble-dans-reso"] { … }
+```
+
+Le menu mobile (`#header ul.nav-mobile`) a une autre structure : une catégorie avec sous-menu
+y est `li > div a`, une entrée simple `li > a`. Vérifier les deux dans l'aperçu.
+
+## Le reste du dépôt
+
+| Chemin | Rôle |
+|---|---|
+| `index.html`, `preview.html`, `preview/` | Outil d'aperçu (rien à coller) |
+| `preview/pages.yaml` | Pages affichées dans la visionneuse : `id`, `titre`, `type` (`page-statique` ou `accueil`), `contenu` (fichier de `custom-af-content/`), `url` sur reso.co |
+| `preview/site/` | Captures de reso.co : en-tête, pied de page, widgets dynamiques, styles Vue, menu actuel |
+| `tools/` | Script de capture de reso.co |
 
 ## Aperçu en local
 
@@ -53,13 +90,15 @@ widgets « html libre ».
 python3 -m http.server 8000
 ```
 
-Puis ouvrir <http://localhost:8000>. En local, l'aperçu se recharge tout seul
-quand `custom.css` ou une page change.
+Puis ouvrir <http://localhost:8000>. En local, l'aperçu se recharge tout seul quand un fichier
+de `custom-af-content/` change. Une erreur dans un fichier YAML s'affiche dans les
+avertissements de la visionneuse, et l'aperçu garde la dernière version valide.
 
 La visionneuse permet de :
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
-- copier le HTML ou `custom.css`, prêt à coller dans AlumnForce ;
-- voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil…).
+- copier le HTML (un bouton par widget « html libre ») ou `custom.css`, prêt à coller ;
+- voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil, widget inconnu,
+  erreur dans un fichier YAML…).
 
 ## Fidélité du rendu
 
@@ -68,7 +107,7 @@ La visionneuse permet de :
 - reso.co bloque le chargement de ses polices depuis un autre domaine (CORS). Elles sont donc :
   - copiées dans `preview/fonts/` : Lato, Montserrat et FontAF (icônes AlumnForce) ;
   - ou chargées depuis jsDelivr : Material Design Icons.
-- Les chemins absolus (`/medias/...`) des pages et de `custom.css` pointent vers reso.co.
+- Les chemins absolus (`/medias/...`) du contenu et de `custom.css` pointent vers reso.co.
 - Le contenu est rendu dans les mêmes conteneurs que sur le site. Pour l'accueil, Vue change
   les conteneurs et le balisage des widgets selon la largeur (breakpoints 600 et 960 px) :
   l'aperçu change de conteneurs (`BREAKPOINTS` dans `preview/preview.js`) et de capture
@@ -79,6 +118,9 @@ La visionneuse permet de :
 - L'en-tête et le pied de page (`preview/site/`) sont une capture du site en vue membre.
   Sous 600 px, l'en-tête inclut la barre de navigation orange fixée en bas de l'écran.
   La barre membre de gauche est simulée par un bandeau vide.
+- Le menu se comporte comme sur le site : en bureau, les sous-menus s'ouvrent au survol
+  (`setupDropdowns`) ; en mobile, le bouton ☰ ouvre le panneau et les chevrons déplient les
+  catégories (`initMobileMenu`). `preview/preview.js` imite pour cela les scripts d'AlumnForce.
 - Vérifié le 2026-11-06 : pour l'accueil, positions et tailles identiques au pixel près à
   1366, 768 et 390 px, et styles calculés identiques (couleurs, polices, tailles, arrondis).
 - Ne sont pas reproduits : le bandeau de consentement cookies (Klaro) qui remplace les iframes
@@ -105,10 +147,11 @@ le script retire de l'en-tête les entrées réservées aux visiteurs, listées 
 
 ## Mettre en ligne une modification
 
-1. Modifier un fichier de `pages/` et/ou `custom.css`, et vérifier dans l'aperçu.
-2. Commiter, pousser : Netlify publie l'aperçu (configuration dans `netlify.toml`).
-   Une pull request donne un aperçu séparé (deploy preview), pour faire relire avant de coller.
-3. Coller le contenu dans AlumnForce (bouton « Copier le HTML » / « Copier custom.css »).
-   Dans l'éditeur de texte, passer en mode code (`</>`) avant de coller.
+1. Modifier un fichier de `custom-af-content/`, et vérifier dans l'aperçu.
+2. Commiter et pousser.
+3. Reporter dans AlumnForce, formulaire par formulaire : coller les fichiers `.html` et
+   `custom.css` (boutons « Copier » de la visionneuse ; dans l'éditeur de texte, passer en mode
+   code `</>` avant de coller), et reproduire `accueil.yaml` et `menus.yaml` dans la
+   configuration du tableau de bord et du menu.
 
 `custom.css` touche **tout le site** : après une modification, vérifier les autres pages de l'aperçu.

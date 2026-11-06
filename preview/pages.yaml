@@ -1,0 +1,22 @@
+# Pages affichées dans la visionneuse (index.html). Configuration de l'aperçu uniquement :
+# le contenu des pages est dans custom-af-content/.
+#
+# Chaque page :
+#   id:       identifiant dans l'adresse de la visionneuse (#page=<id>)
+#   titre:    nom affiché dans la visionneuse
+#   type:     page-statique (contenu : un fichier .html)
+#             ou accueil (contenu : un fichier .yaml qui liste les widgets du tableau de bord)
+#   contenu:  fichier dans custom-af-content/
+#   url:      la page correspondante sur reso.co
+
+- id: accueil
+  titre: Accueil membres
+  type: accueil
+  contenu: accueil.yaml
+  url: https://www.reso.co/
+
+- id: minuteur
+  titre: Minuteur
+  type: page-statique
+  contenu: minuteur.html
+  url: https://www.reso.co/page/minuteur

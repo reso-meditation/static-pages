@@ -1,0 +1,22 @@
+# Page d'accueil des membres (tableau de bord AlumnForce) : les widgets, dans l'ordre.
+# À reproduire dans la configuration du tableau de bord, dans le back-office AlumnForce.
+#
+# Deux sortes de widgets :
+#   - widget: <nom>          widget dynamique d'AlumnForce (slider, agenda, articles…). L'aperçu le
+#                            rend à partir de sa capture sur reso.co, preview/site/widgets/<nom>.<largeur>.html
+#                            (liste et ordre des widgets capturés : preview/site/widgets/widgets.json).
+#   - html: <fichier>.html   widget « html libre » : fichier de ce dossier, à coller dans AlumnForce.
+#     titre: <texte>         (facultatif) nom affiché dans la visionneuse
+#
+# Le slider est toujours en tête : sur reso.co, AlumnForce le place au-dessus des autres widgets.
+
+- widget: slider
+
+- html: html-widget1.html
+  titre: Bandeau groupe de partage
+
+- widget: nos-prochaines-rencontres
+- widget: les-nouvelles-de-reso
+- widget: les-derniers-replays
+- widget: les-prochains-stages
+- widget: meditations-du-quotidien

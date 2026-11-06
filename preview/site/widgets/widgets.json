@@ -5,30 +5,31 @@
     "tablette": 768,
     "mobile": 390
   },
-  "slider": true,
   "ordreSurLeSite": [
     {
-      "html": true,
-      "rang": 1
+      "widget": "slider"
     },
     {
-      "capture": "nos-prochaines-rencontres",
+      "html": "widget « html libre » n° 1"
+    },
+    {
+      "widget": "nos-prochaines-rencontres",
       "titre": "Nos prochaines rencontres"
     },
     {
-      "capture": "les-nouvelles-de-reso",
+      "widget": "les-nouvelles-de-reso",
       "titre": "Les nouvelles de Reso"
     },
     {
-      "capture": "les-derniers-replays",
+      "widget": "les-derniers-replays",
       "titre": "Les derniers replays"
     },
     {
-      "capture": "les-prochains-stages",
+      "widget": "les-prochains-stages",
       "titre": "Les prochains stages"
     },
     {
-      "capture": "meditations-du-quotidien",
+      "widget": "meditations-du-quotidien",
       "titre": "Méditations du quotidien"
     }
   ]

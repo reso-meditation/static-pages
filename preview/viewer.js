@@ -1,4 +1,4 @@
-// Visionneuse : liste les pages de pages/pages.json et les affiche via preview.html.
+// Visionneuse : liste les pages de preview/pages.yaml et les affiche via preview.html.
 // L'état (page, largeur) est dans l'URL (#page=…&w=…) pour pouvoir partager un lien.
 (function () {
   'use strict';
@@ -72,12 +72,25 @@
 
   // Un bouton par fragment HTML à coller dans AlumnForce (une page statique en a un,
   // l'accueil un par widget « html libre »).
+  var CONTENT = 'custom-af-content/';
   function renderCopyButtons(entry) {
     var files = entry.type === 'accueil'
-      ? (entry.widgets || []).filter(function (w) { return w.html; })
-      : [{ html: entry.html || 'pages/' + entry.id + '.html' }];
-    var box = $('copy-buttons');
-    box.replaceChildren();
+      ? fetch(CONTENT + entry.contenu, { cache: 'no-store' }).then(function (r) { return r.text(); })
+          .then(function (t) {
+            var list = window.jsyaml.load(t);
+            return (Array.isArray(list) ? list : []).filter(function (w) { return w && w.html; })
+              .map(function (w) { return { html: CONTENT + w.html, titre: w.titre }; });
+          })
+          .catch(function () { return []; })
+      : Promise.resolve([{ html: CONTENT + entry.contenu }]);
+    files.then(function (files) {
+      if (entry.id !== state.page) return;
+      var box = $('copy-buttons');
+      box.replaceChildren();
+      showCopyButtons(box, files);
+    });
+  }
+  function showCopyButtons(box, files) {
     files.forEach(function (w, i) {
       var b = document.createElement('button');
       b.type = 'button';
@@ -116,13 +129,14 @@
     state.w = parseInt(w.dataset.w, 10);
     render();
   });
-  $('copy-css').addEventListener('click', function () { copyFile('custom.css', 'custom.css'); });
+  $('copy-css').addEventListener('click', function () { copyFile(CONTENT + 'custom.css', 'custom.css'); });
   window.addEventListener('hashchange', function () { readHash(); render(); });
   new ResizeObserver(fit).observe(stage);
 
-  fetch('pages/pages.json', { cache: 'no-store' })
-    .then(function (r) { return r.json(); })
-    .then(function (list) {
+  fetch('preview/pages.yaml', { cache: 'no-store' })
+    .then(function (r) { return r.text(); })
+    .then(function (text) {
+      var list = window.jsyaml.load(text);
       pages = list;
       var ul = $('page-list');
       list.forEach(function (p) {
@@ -132,7 +146,7 @@
         a.dataset.id = p.id;
         a.textContent = p.titre;
         var small = document.createElement('small');
-        small.textContent = 'pages/' + p.id + '.html';
+        small.textContent = CONTENT + p.contenu;
         a.appendChild(small);
         a.addEventListener('click', function (e) {
           e.preventDefault();
@@ -146,6 +160,6 @@
       render();
     })
     .catch(function () {
-      $('page-title').textContent = 'pages/pages.json introuvable';
+      $('page-title').textContent = 'preview/pages.yaml introuvable ou invalide';
     });
 })();

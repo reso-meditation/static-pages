@@ -58,6 +58,20 @@ function stylesAfterCustomInPage() {
     : '<style' + (e.id ? ' id="' + e.id + '"' : '') + '>' + e.textContent + '</style>').join('\n');
 }
 
+// YAML minimal pour le menu : listes d'objets dont les valeurs sont des chaînes, des nombres ou des listes.
+function yamlScalar(v) {
+  if (typeof v === 'number') return String(v);
+  const plain = /^[^\s'"#&*!|>%@`{}\[\],?:-]/.test(v) && !/: |\s#|:$|\s$/.test(v) &&
+    !/^(true|false|null|yes|no|on|off|~|[-+]?\d+(\.\d+)?)$/i.test(v);
+  return plain ? v : JSON.stringify(v);
+}
+function toYaml(items, indent = '') {
+  return items.map(item => Object.entries(item).map(([k, v], i) => {
+    const prefix = indent + (i === 0 ? '- ' : '  ');
+    return Array.isArray(v) ? prefix + k + ':\n' + toYaml(v, indent + '    ') : prefix + k + ': ' + yamlScalar(v) + '\n';
+  }).join('')).join('');
+}
+
 function slugify(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -111,12 +125,38 @@ async function loadLazyImages(page) {
     process.exit(1);
   }
   const ids = Object.keys(VISITOR_ONLY_MENU);
-  const header = await page.evaluate(([fn, avatar, ids]) => (new Function('return ' + fn)())('#header', avatar, ids), [cleanInPage.toString(), AVATAR, ids]);
+  const header = await page.evaluate(async ([fn, avatar, ids]) => {
+    // Sous-menus du menu bureau : le serveur les envoie dans chaque <li>, puis le script AlumnForce
+    // les en retire au chargement (il les réaffiche au survol). On les reprend du HTML du serveur.
+    const server = new DOMParser().parseFromString(await (await fetch(location.href, { credentials: 'include' })).text(), 'text/html');
+    const header = document.querySelector('#header').cloneNode(true);
+    header.querySelectorAll('ul.nav:not(.nav-mobile) > li[id]').forEach(li => {
+      const sub = server.querySelector('ul.nav:not(.nav-mobile) > li[id="' + li.id + '"] > ul.dropdown-menu');
+      if (sub && !li.querySelector(':scope > ul.dropdown-menu')) li.appendChild(document.importNode(sub, true));
+    });
+    return (new Function('return ' + fn)())(null, avatar, ids, header);
+  }, [cleanInPage.toString(), AVATAR, ids]);
   const footer = await page.evaluate(([fn, avatar]) => (new Function('return ' + fn)())('#footer', avatar, []), [cleanInPage.toString(), AVATAR]);
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, 'header.html'), stamp + header + '\n');
   fs.writeFileSync(path.join(OUT, 'footer.html'), stamp + footer + '\n');
   fs.writeFileSync(path.join(OUT, 'styles.page-statique.html'), stamp + await page.evaluate(stylesAfterCustomInPage) + '\n');
+  // Menu du site en YAML (même format que custom-af-content/menus.yaml), lu dans le menu bureau de l'en-tête capturé
+  const menu = await page.evaluate((html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const read = ul => [...ul.children].filter(li => li.tagName === 'LI').map(li => {
+      const a = li.querySelector(':scope > a');
+      const item = { titre: a.textContent.trim(), lien: a.getAttribute('href') };
+      const sub = li.querySelector(':scope > ul.dropdown-menu');
+      if (sub) item['sous-menu'] = read(sub);
+      return item;
+    });
+    return read(doc.querySelector('ul.nav:not(.nav-mobile)'));
+  }, header);
+  fs.writeFileSync(path.join(OUT, 'menu-site.yaml'),
+    '# Menu de reso.co (vue membre), capturé le ' + new Date().toISOString().slice(0, 10) +
+    ' par tools/capture-site-chrome.js — ne pas modifier à la main.\n' +
+    '# Pour essayer un autre menu dans l\'aperçu, modifier custom-af-content/menus.yaml (même format).\n' + toYaml(menu));
   console.log('En-tête et pied de page capturés (menu visiteurs retiré : ' + Object.values(VISITOR_ONLY_MENU).join(', ') + ')');
   await ctx.close();
 
@@ -155,21 +195,21 @@ async function loadLazyImages(page) {
 
     if (bp === 'bureau') fs.writeFileSync(path.join(OUT, 'styles.accueil.html'), stamp + await page.evaluate(stylesAfterCustomInPage) + '\n');
     if (found.slider) fs.writeFileSync(path.join(widgetsDir, 'slider.' + bp + '.html'), stamp + found.slider + '\n');
+    // Même vocabulaire que custom-af-content/accueil.yaml : { widget: <nom> } ou { html: <rang> }
     let htmlCount = 0;
-    const thisOrder = found.items.map(it => {
-      if (!it.html) return { html: true, rang: ++htmlCount };
+    const thisOrder = (found.slider ? [{ widget: 'slider' }] : []).concat(found.items.map(it => {
+      if (!it.html) return { html: 'widget « html libre » n° ' + (++htmlCount) };
       const slug = slugify(it.title || it.type);
       fs.writeFileSync(path.join(widgetsDir, slug + '.' + bp + '.html'), stamp + it.html + '\n');
-      return { capture: slug, titre: it.title };
-    });
+      return { widget: slug, titre: it.title };
+    }));
     order = order || thisOrder;
-    console.log('Widgets ' + bp + ' (' + width + ' px) : ' + thisOrder.map(o => o.capture || 'html libre ' + o.rang).join(', '));
+    console.log('Widgets ' + bp + ' (' + width + ' px) : ' + thisOrder.map(o => o.widget || o.html).join(', '));
     await ctx.close();
   }
   fs.writeFileSync(path.join(widgetsDir, 'widgets.json'), JSON.stringify({
     capture: new Date().toISOString().slice(0, 10),
     largeurs: WIDTHS,
-    slider: fs.existsSync(path.join(widgetsDir, 'slider.bureau.html')),
     ordreSurLeSite: order
   }, null, 2) + '\n');
   await browser.close();

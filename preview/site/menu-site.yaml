@@ -1,0 +1,112 @@
+# Menu de reso.co (vue membre), capturé le 2026-11-06 par tools/capture-site-chrome.js — ne pas modifier à la main.
+# Pour essayer un autre menu dans l'aperçu, modifier custom-af-content/menus.yaml (même format).
+- titre: Accueil
+  lien: /default/index/index
+- titre: Être ensemble
+  lien: /page/comment-etre-ensemble-dans-reso
+  sous-menu:
+    - titre: Comment être ensemble dans Reso
+      lien: /page/comment-etre-ensemble-dans-reso
+    - titre: Annuaire des membres
+      lien: /addressbook/fullsearch/index
+    - titre: Les enseignants
+      lien: /page/les-enseignants
+    - titre: Les groupes
+      lien: /groups
+    - titre: Les antennes et groupes locaux
+      lien: /page/nos-antennes-1
+    - titre: Offrir la méditation aux aînés et aux aidants
+      lien: /page/ompa
+    - titre: Statuts et bureau de l'association
+      lien: /page/statuts-et-bureau-de-l-association
+- titre: Programme
+  lien: /page/votre-chemin-dans-reso
+  sous-menu:
+    - titre: Votre chemin dans Reso
+      lien: /page/votre-chemin-dans-reso
+    - titre: Le chemin des stages
+      lien: /page/voie-stages
+    - titre: La voie bouddhiste
+      lien: /page/la-voie-bouddhiste
+    - titre: La voie kasung
+      lien: /page/la-voie-kasung
+    - titre: Programmation 2026 - 2027
+      lien: https://www.reso.co/page/programme-2026-2027
+- titre: Ressources
+  lien: /page/ressources
+  sous-menu:
+    - titre: Présentation des enseignements et méditations
+      lien: /page/ressources
+    - titre: Enseignements
+      lien: /articles/categories/290%2C302%2C303%2C300%2C299%2C291%2C310
+      sous-menu:
+        - titre: Cycles en cours - Replay
+          lien: /articles/categories/310
+        - titre: Cycles sur l'existence et la méditation
+          lien: /articles/categories/303
+        - titre: Une Heure, une Œuvre
+          lien: /articles/categories/299
+        - titre: Cycles de philosophie
+          lien: /articles/categories/300
+        - titre: Cycles sur le bouddhisme
+          lien: /articles/categories/291
+        - titre: Cycles passés pour "Méditons Ensemble"
+          lien: /articles/categories/301
+        - titre: Rencontres et conférences
+          lien: /articles/categories/302
+    - titre: Méditations
+      lien: /articles/categories/289%2C292%2C297%2C293%2C298%2C295%2C296%2C294
+      sous-menu:
+        - titre: Méditations du quotidien
+          lien: /articles/categories/292
+        - titre: Pratiques de bienveillance
+          lien: /articles/categories/294
+        - titre: Méditations sur le corps
+          lien: /articles/categories/293
+        - titre: Méditations sur les émotions
+          lien: /articles/categories/296
+        - titre: Méditations sur la confiance
+          lien: /articles/categories/295
+        - titre: Méditations sur l'esprit
+          lien: /articles/categories/297
+        - titre: Méditations spécifiques
+          lien: /articles/categories/298
+- titre: Activités
+  lien: /page/activites-1
+  sous-menu:
+    - titre: Stage - 5 jours pour découvrir la méditation
+      lien: /page/activites-stages
+    - titre: Groupes de méditation en ligne
+      lien: /page/activites-groupes
+    - titre: Cours et séminaires en ligne
+      lien: /page/activites-education-populaire
+    - titre: Formations
+      lien: https://formations.reso.co/
+    - titre: Programmation 2026 - 2027
+      lien: /page/programmation-2026-2027
+- titre: Agenda
+  lien: /agenda
+  sous-menu:
+    - titre: Agenda général
+      lien: /agenda
+    - titre: Agenda Paris
+      lien: https://reso.co/group/paris-maison-de-la-meditation/37/calendar
+    - titre: Agenda des stages
+      lien: /agenda/upcoming?category%5B0%5D=281
+- titre: Blog
+  lien: /articles/categories/311
+- titre: Timer
+  lien: https://www.reso.co/page/minuteur
+- titre: Aide
+  lien: https://reso.co/help/
+  sous-menu:
+    - titre: Questions fréquentes et tutoriels
+      lien: https://reso.co/help/
+    - titre: Contacts référents
+      lien: /contacts-referents/
+    - titre: Liens utiles
+      lien: /page/liens-utiles
+    - titre: Téléchargez l'application Reso
+      lien: /page/telechargez-l-application-reso
+    - titre: Accessibilité et handicap
+      lien: /page/accessibilite-et-handicap
