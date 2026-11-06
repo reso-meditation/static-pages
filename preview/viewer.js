@@ -51,6 +51,7 @@
     $('page-type').textContent = TYPES[entry.type] || entry.type;
     $('open-alone').href = previewUrl();
     $('open-live').href = entry.url || 'https://www.reso.co/';
+    renderCopyButtons(entry);
     document.title = entry.titre + ' · Pages Reso';
 
     var src = previewUrl();
@@ -67,6 +68,25 @@
     t.classList.add('show');
     clearTimeout(toast.timer);
     toast.timer = setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  // Un bouton par fragment HTML à coller dans AlumnForce (une page statique en a un,
+  // l'accueil un par widget « html libre »).
+  function renderCopyButtons(entry) {
+    var files = entry.type === 'accueil'
+      ? (entry.widgets || []).filter(function (w) { return w.html; })
+      : [{ html: entry.html || 'pages/' + entry.id + '.html' }];
+    var box = $('copy-buttons');
+    box.replaceChildren();
+    files.forEach(function (w, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn primary';
+      b.textContent = files.length > 1 ? 'Copier : ' + (w.titre || 'widget ' + (i + 1)) : 'Copier le HTML';
+      b.title = w.html;
+      b.addEventListener('click', function () { copyFile(w.html, w.titre || 'HTML'); });
+      box.appendChild(b);
+    });
   }
 
   function copyFile(path, label) {
@@ -96,7 +116,6 @@
     state.w = parseInt(w.dataset.w, 10);
     render();
   });
-  $('copy-html').addEventListener('click', function () { copyFile('pages/' + state.page + '.html', 'HTML'); });
   $('copy-css').addEventListener('click', function () { copyFile('custom.css', 'custom.css'); });
   window.addEventListener('hashchange', function () { readHash(); render(); });
   new ResizeObserver(fit).observe(stage);

@@ -20,7 +20,8 @@
   <link rel="stylesheet" href="https://www.reso.co/assets/css/main.build.css">
   <!-- Polices d'icônes (FontAF, Material Design Icons), même raison CORS : après main.build.css pour la remplacer -->
   <link rel="stylesheet" href="preview/fonts/icons.css">
-  <!-- custom.css (éditeur CSS AlumnForce) : injecté ici par preview/preview.js -->
+  <!-- custom.css (éditeur CSS AlumnForce) : injecté ici par preview/preview.js,
+       suivi des styles que Vue ajoute sur reso.co (preview/site/styles.<type>.html) -->
   <style id="custom-css"></style>
   <!-- Propre à l'aperçu (n'existe pas sur reso.co) : emplacement de la barre membre.
        Même règle que main.build.css : à partir de 600 px, .af-push-content a une marge gauche de 60 px. -->
@@ -49,7 +50,8 @@
     </div>
   </template>
 
-  <!-- Conteneurs relevés sur https://www.reso.co/ (widget « html libre » du tableau de bord).
+  <!-- Tableau de bord de l'accueil, relevé sur https://www.reso.co/ :
+       le slider, puis la suite de widgets déplaçables (data-widgets), décrite dans pages/pages.json.
        Vue change les classes selon la largeur (data-bp) : voir BREAKPOINTS dans preview/preview.js -->
   <template id="tpl-accueil">
     <div class="v-app" data-tag-id="app">
@@ -62,17 +64,8 @@
                   <div class="row" data-bp="row">
                     <div class="col col-9" data-bp="col">
                       <div>
-                        <div data-tag-id="draggable">
-                          <div class="is-draggable">
-                            <div data-tag-id="instance-layout-widget-html-content">
-                              <div data-tag-id="instance-layout-widget-list-element">
-                                <div>
-                                  <div class="richedit_wrap" data-slot></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        <div data-slider></div>
+                        <div data-tag-id="draggable" data-widgets></div>
                       </div>
                     </div>
                   </div>
@@ -80,6 +73,17 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Widget « html libre » : enveloppes relevées sur reso.co, le fragment va dans .richedit_wrap -->
+  <template id="tpl-widget-html">
+    <div data-tag-id="instance-layout-widget-html-content">
+      <div data-tag-id="instance-layout-widget-list-element">
+        <div>
+          <div class="richedit_wrap" data-slot></div>
         </div>
       </div>
     </div>

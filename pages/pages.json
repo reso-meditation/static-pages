@@ -3,7 +3,16 @@
     "id": "accueil-membres",
     "titre": "Accueil membres",
     "type": "accueil",
-    "url": "https://www.reso.co/"
+    "url": "https://www.reso.co/",
+    "slider": true,
+    "widgets": [
+      { "html": "pages/accueil-membres.html", "titre": "Bandeau groupe de partage" },
+      { "capture": "nos-prochaines-rencontres" },
+      { "capture": "les-nouvelles-de-reso" },
+      { "capture": "les-derniers-replays" },
+      { "capture": "les-prochains-stages" },
+      { "capture": "meditations-du-quotidien" }
+    ]
   },
   {
     "id": "minuteur",

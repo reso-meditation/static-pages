@@ -1,0 +1,35 @@
+{
+  "capture": "2026-11-06",
+  "largeurs": {
+    "bureau": 1366,
+    "tablette": 768,
+    "mobile": 390
+  },
+  "slider": true,
+  "ordreSurLeSite": [
+    {
+      "html": true,
+      "rang": 1
+    },
+    {
+      "capture": "nos-prochaines-rencontres",
+      "titre": "Nos prochaines rencontres"
+    },
+    {
+      "capture": "les-nouvelles-de-reso",
+      "titre": "Les nouvelles de Reso"
+    },
+    {
+      "capture": "les-derniers-replays",
+      "titre": "Les derniers replays"
+    },
+    {
+      "capture": "les-prochains-stages",
+      "titre": "Les prochains stages"
+    },
+    {
+      "capture": "meditations-du-quotidien",
+      "titre": "Méditations du quotidien"
+    }
+  ]
+}

@@ -64,16 +64,6 @@ iframe[src*="samply.app"] {
     display: none !important;
 }
 
-/* Menu principal (bureau et mobile) : entrées masquées pour les membres connectés.
-   Les visiteurs (html sans .user-is-login) les voient toujours.
-   180 Présentation · 182 Activités · 1286 Formations · 190 Nous rejoindre */
-.user-is-login #header #submenu-180,
-.user-is-login #header #submenu-182,
-.user-is-login #header #submenu-1286,
-.user-is-login #header #submenu-190 {
-    display: none !important;
-}
-
 /* menubar membre > bouton "ajouter contenu" */
 a#addContentLightbox,
     /* page annuaire onglet entreprises  */
