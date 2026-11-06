@@ -550,13 +550,56 @@
     }
   }
 
+  // ---------- Navigation ----------
+  // Un lien vers une page de l'aperçu (preview/pages.yaml : url, liens) l'affiche dans l'aperçu ;
+  // les autres ouvrent reso.co dans un nouvel onglet. Le logo (href="#", le script AlumnForce
+  // mène à l'accueil) va à la page dont l'url est « / ».
+  var allPages = [];
+  function pathOf(href) {
+    try {
+      var u = new URL(href, ORIGIN + '/');
+      if (!/(^|\.)reso\.co$/.test(u.hostname) && u.origin !== location.origin) return null;
+      return u.pathname.replace(/\/+$/, '') || '/';
+    } catch (e) { return null; }
+  }
+  function pagePaths(p) { return [p.url].concat(p.liens || []).map(pathOf); }
+  function navigate(id) {
+    if (window.parent !== window) return notify({ navigate: id });
+    var q = new URLSearchParams(location.search);
+    q.set('page', id);
+    location.search = q.toString();
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    var logo = a.querySelector('img.header-dump');
+    var path = logo ? '/' : (/^(javascript:|#)/.test(href) ? null : pathOf(href));
+    if (path === null) {
+      if (/^(javascript:|#)/.test(href)) e.preventDefault();   // boutons de l'en-tête : rien à ouvrir
+      return;
+    }
+    e.preventDefault();
+    var target = allPages.find(function (p) { return pagePaths(p).indexOf(path) >= 0; });
+    if (target) { if (target.id !== pageId) navigate(target.id); return; }
+    window.open(new URL(href, ORIGIN + '/').href, '_blank', 'noopener');
+  }, true);
+
+  // Raccourcis de la visionneuse (C : comparer, B : basculer), aussi quand l'aperçu a le focus
+  document.addEventListener('keydown', function (e) {
+    if (window.parent === window || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+    if (/^[cCbB]$/.test(e.key)) notify({ key: e.key.toLowerCase() });
+  });
+
   if (!pageId) return showError('Paramètre ?page= manquant.');
 
   fetchText('preview/pages.yaml')
     .then(function (text) {
       var r = yamlLoad(text, 'preview/pages.yaml');
       if (r.error) throw new Error(r.error);
-      var entry = (r.value || []).find(function (p) { return p.id === pageId; });
+      allPages = r.value || [];
+      var entry = allPages.find(function (p) { return p.id === pageId; });
       if (!entry) throw new Error('Page « ' + pageId + ' » absente de preview/pages.yaml.');
       if (!document.getElementById('tpl-' + entry.type)) throw new Error('Type de page inconnu dans preview/pages.yaml : « ' + entry.type + ' » (attendu : page-statique ou accueil).');
       if (!entry.contenu) throw new Error('Page « ' + pageId + ' » : « contenu » manquant dans preview/pages.yaml.');

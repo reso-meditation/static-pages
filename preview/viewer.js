@@ -1,4 +1,5 @@
 // Visionneuse : affiche les pages de preview/pages.yaml via preview.html, avec deux réglages A et B
+// On passe d'une page à l'autre par le vrai menu de la page affichée (voir « Navigation » dans preview.js).
 // (version Proposition/Production + choix de preview/choix.yaml), seuls ou côte à côte.
 // Tout l'état est dans l'adresse (#page=…&w=…&cmp=1&a=…&b=…) pour pouvoir partager un lien.
 (function () {
@@ -239,6 +240,12 @@
   window.addEventListener('message', function (e) {
     var d = e.data;
     if (!d || d.source !== 'reso-preview' || d.page !== state.page || !warnings[d.cote]) return;
+    if (d.key === 'c') return toggleCompare();
+    if (d.key === 'b') return swap();
+    if (d.navigate) {   // lien vers une autre page de l'aperçu (logo, Timer…) : les deux volets suivent
+      if (pages.some(function (p) { return p.id === d.navigate; })) { state.page = d.navigate; update(); }
+      return;
+    }
     warnings[d.cote] = d.error ? [d.error] : (d.warnings || []);
     showWarnings();
   });
@@ -297,9 +304,6 @@
     if (!entry) return;
     state.page = entry.id;
     writeHash();
-    document.querySelectorAll('#page-list a').forEach(function (a) {
-      if (a.dataset.id === entry.id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-    });
     document.querySelectorAll('#widths button').forEach(function (b) {
       b.setAttribute('aria-pressed', String(parseInt(b.dataset.w, 10) === state.w));
     });
@@ -353,24 +357,6 @@
   ]).then(function (r) {
     pages = window.jsyaml.load(r[0]) || [];
     questions = (window.jsyaml.load(r[1]) || []).filter(function (q) { return q && q.id && q.options && q.options.length; });
-    var ul = $('page-list');
-    pages.forEach(function (p) {
-      var li = document.createElement('li');
-      var a = document.createElement('a');
-      a.href = '#page=' + encodeURIComponent(p.id);
-      a.dataset.id = p.id;
-      a.textContent = p.titre;
-      var small = document.createElement('small');
-      small.textContent = CONTENT + p.contenu;
-      a.appendChild(small);
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        state.page = p.id;
-        update();
-      });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
     readHash();
     update();
   }).catch(function (e) {

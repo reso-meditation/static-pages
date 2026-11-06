@@ -20,31 +20,6 @@ body {
   background: var(--canvas);
 }
 
-/* Barre latérale */
-.sidebar {
-  width: 240px;
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  background: var(--paper);
-  border-right: 1px solid var(--line);
-}
-.brand { padding: 20px 18px 14px; border-bottom: 1px solid var(--line); }
-.brand strong { display: block; font-size: 16px; color: var(--purple); }
-.brand span { color: var(--muted); font-size: 12px; }
-nav { flex: 1; overflow-y: auto; padding: 10px 8px; }
-.page-list { list-style: none; margin: 0; padding: 0; }
-.page-list a {
-  display: block;
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: inherit;
-  text-decoration: none;
-}
-.page-list a:hover { background: #f4f3ef; }
-.page-list a[aria-current="page"] { background: var(--purple-soft); color: var(--purple); font-weight: 600; }
-.page-list small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
-
 /* Zone de travail */
 .workspace { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .toolbar {
@@ -58,6 +33,7 @@ nav { flex: 1; overflow-y: auto; padding: 10px 8px; }
   border-bottom: 1px solid var(--line);
 }
 .title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.title .brand { color: var(--purple); font-size: 15px; white-space: nowrap; padding-right: 10px; border-right: 1px solid var(--line); }
 .title h1 { margin: 0; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: #f1efe9; color: var(--muted); white-space: nowrap; }
 .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -191,8 +167,6 @@ body.panel-closed .panel { display: none; }
 
 @media (max-width: 720px) {
   body { flex-direction: column; }
-  .sidebar { width: auto; border-right: 0; border-bottom: 1px solid var(--line); }
-  nav { max-height: 140px; }
   .panel { width: auto; max-height: 45vh; border-left: 0; border-top: 1px solid var(--line); }
   .stage { padding: 8px; }
 }

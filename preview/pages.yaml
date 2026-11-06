@@ -8,12 +8,17 @@
 #             ou accueil (contenu : un fichier .yaml qui liste les widgets du tableau de bord)
 #   contenu:  fichier dans custom-af-content/
 #   url:      la page correspondante sur reso.co
+#   liens:    (facultatif) autres adresses de cette page sur reso.co
+#
+# Navigation : dans l'aperçu, un lien vers l'url (ou un des liens) d'une de ces pages l'affiche ;
+# tout autre lien ouvre reso.co dans un nouvel onglet. Le logo mène à la page dont l'url est « / ».
 
 - id: accueil
   titre: Accueil membres
   type: accueil
   contenu: accueil.yaml
   url: https://www.reso.co/
+  liens: [/default/index/index, /default/index/home]
 
 - id: minuteur
   titre: Minuteur

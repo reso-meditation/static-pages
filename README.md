@@ -120,6 +120,9 @@ de `custom-af-content/` change. Une erreur dans un fichier YAML s'affiche dans l
 avertissements de la visionneuse, et l'aperçu garde la dernière version valide.
 
 La visionneuse permet de :
+- naviguer avec le **vrai menu** de la page : un lien vers une page de l'aperçu (le logo et
+  « Accueil » pour l'accueil, « Timer » pour le minuteur ; voir `url` et `liens` dans
+  `preview/pages.yaml`) reste dans l'aperçu, tout autre lien ouvre reso.co dans un nouvel onglet ;
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
 - comparer la **Proposition** (`custom-af-content/`) et la **Production** (ce qui est en ligne) ;
 - essayer les **choix** de `preview/choix.yaml` (panneau « Choix ») ;
@@ -192,7 +195,8 @@ cd .. && RESO_COOKIE='AFSESSID=…; PHPSESSID=…' node tools/capture-site-chrom
 
 `RESO_COOKIE` contient les cookies d'une session membre connectée (outils de développement du
 navigateur → Stockage → Cookies). Le script retire les scripts, remplace la photo de profil
-par un avatar neutre et ignore le mur social (messages des membres).
+par un avatar neutre, retire le menu d'administration et l'identifiant du compte (`member_id`)
+des liens, et ignore le mur social (messages des membres).
 
 Un compte admin voit à la fois le menu des membres et celui des visiteurs (bug AlumnForce) :
 le script retire de l'en-tête les entrées réservées aux visiteurs, listées dans

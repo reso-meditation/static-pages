@@ -43,6 +43,10 @@ function cleanInPage(selectorOrNull, avatar, removeIds, el) {
   c.querySelectorAll('[id^="fullsearch-toolbar-results"], .modal').forEach(n => n.remove());
   removeIds.forEach(id => c.querySelectorAll('[id="' + id + '"]').forEach(n => n.remove()));
   c.querySelectorAll('img[src*="/medias/profile/"]').forEach(img => { img.src = avatar; img.removeAttribute('srcset'); });
+  // Menu d'administration (le compte de capture est admin ; un membre ne le voit pas)
+  c.querySelectorAll('[id^="mobile_accordion_admin"], li:has(> [id^="mobile_admin_"]), .af-userbar-admin').forEach(n => n.remove());
+  // Identifiant du compte de capture dans les liens (ex. « mes groupes » : ?member_id=1234)
+  c.querySelectorAll('a[href*="member_id="]').forEach(a => a.setAttribute('href', a.getAttribute('href').replace(/([?&])member_id=\d+&?/, '$1').replace(/[?&]$/, '')));
   c.querySelectorAll('*').forEach(n => {
     // Les attributs data-v-… sont gardés : les styles « scoped » des composants Vue les ciblent.
     [...n.attributes].forEach(a => { if (/^(on|@|:|v-on|v-bind)/.test(a.name)) n.removeAttribute(a.name); });
