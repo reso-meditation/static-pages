@@ -139,10 +139,10 @@
         v.titre, v.detail, null, function (sd) { state[sd].v = v.id; update(); });
     })));
     questions.forEach(function (q) {
-      box.appendChild(block(q.question, (q.options || []).map(function (o, i) {
+      box.appendChild(block(q.question, (q.options || []).map(function (o) {
         return row(q.id, o.id, function (sd) { return selected(state[sd], q) === o.id; },
           function (sd) { return state[sd].v === 'production'; },
-          o.titre + (i === 0 ? ' (proposition actuelle)' : ''), o.detail, o.couleurs,
+          o.titre, o.detail, o.couleurs,
           function (sd) { state[sd].c[q.id] = o.id; update(); });
       })));
     });
