@@ -5,9 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pages Reso</title>
   <link rel="icon" href="data:,">
+  <!-- CodeMirror (éditeur du brouillon) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css">
   <link rel="stylesheet" href="preview/viewer.css">
 </head>
 <body>
+  <aside id="editor" class="editor" aria-label="Éditer le brouillon" hidden>
+    <div class="editor-head">
+      <strong>Éditer</strong>
+      <span id="editor-status" class="hint"></span>
+      <button type="button" id="editor-close" class="link-btn">Fermer</button>
+    </div>
+    <div id="editor-tabs" class="editor-tabs" role="tablist" aria-label="Fichiers de custom-af-content/"></div>
+    <div id="editor-warn" class="editor-warn" hidden></div>
+    <div id="editor-cm" class="editor-cm"></div>
+    <div class="editor-actions">
+      <button type="button" id="ed-copy" class="btn">Copier</button>
+      <button type="button" id="ed-diff" class="btn">Différences</button>
+      <button type="button" id="ed-revert" class="btn">Rétablir</button>
+      <button type="button" id="ed-new" class="btn">Nouveau fichier</button>
+      <button type="button" id="ed-discard" class="link-btn">Abandonner le brouillon</button>
+    </div>
+  </aside>
+  <div id="editor-resizer" class="editor-resizer" role="separator" aria-orientation="vertical" title="Glisser pour redimensionner" hidden></div>
+
   <section class="workspace">
     <div class="toolbar">
       <div class="title">
@@ -24,6 +46,7 @@
         </div>
         <button type="button" id="compare" class="btn" aria-pressed="false" title="Deux réglages côte à côte (touche C)">◧ Comparer</button>
         <button type="button" id="swap" class="btn" title="Échanger les réglages A et B (touche B)">⇄ Basculer</button>
+        <button type="button" id="toggle-editor" class="btn" aria-pressed="false" aria-controls="editor" title="Modifier les fichiers de custom-af-content/ dans un brouillon">✎ Éditer</button>
         <button type="button" id="toggle-panel" class="btn" aria-pressed="true" aria-controls="panel">⚙ Choix</button>
         <a id="open-live" class="btn" target="_blank" rel="noopener">Voir sur reso.co</a>
       </div>
@@ -50,8 +73,30 @@
     </div>
   </aside>
 
+  <dialog id="diff-dialog" class="diff-dialog">
+    <header>
+      <strong id="diff-title"></strong>
+      <button type="button" id="diff-copy" class="btn">Copier les différences</button>
+      <button type="button" id="diff-close" class="btn">Fermer</button>
+    </header>
+    <div id="diff-body" class="diff-body"></div>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/yaml/yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/jump-to-line.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+  <script src="preview/editor.js"></script>
   <script src="preview/viewer.js"></script>
 </body>
 </html>

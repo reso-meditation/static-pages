@@ -7,11 +7,25 @@
   var params = new URLSearchParams(location.search);
   var pageId = params.get('page');
   var isLocal = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname);
-  // Version affichée : « proposition » (custom-af-content/, ce qu'on modifie) ou « production »
-  // (preview/site/production/, ce qui est en ligne, capturé par tools/capture-site-chrome.js).
-  var VERSION = params.get('version') === 'production' ? 'production' : 'proposition';
+  // Version affichée : « proposition » (custom-af-content/, ce qu'on modifie), « brouillon » (la
+  // proposition + les modifications faites dans l'éditeur de la visionneuse, voir preview/editor.js)
+  // ou « production » (preview/site/production/, ce qui est en ligne, capturé par tools/capture-site-chrome.js).
+  var VERSION = ['production', 'brouillon'].indexOf(params.get('version')) >= 0 ? params.get('version') : 'proposition';
   var PROPOSITION = 'custom-af-content/';
   var CONTENT = VERSION === 'production' ? 'preview/site/production/' : PROPOSITION;
+  var BROUILLON_KEY = 'reso-brouillon-v1';
+
+  // Brouillon : texte modifié d'un fichier, lu dans la visionneuse (iframe) ou, aperçu ouvert seul,
+  // dans la sauvegarde du navigateur. undefined : pas de modification, on lit le fichier du dépôt.
+  function brouillonText(path) {
+    if (VERSION !== 'brouillon') return undefined;
+    var files = null;
+    try { if (window.parent !== window && window.parent.__resoBrouillon) files = window.parent.__resoBrouillon.files; } catch (e) {}
+    if (!files) {
+      try { files = (JSON.parse(localStorage.getItem(BROUILLON_KEY)) || {}).files; } catch (e) {}
+    }
+    return files && typeof files[path] === 'string' ? files[path] : undefined;
+  }
   // Choix (preview/choix.yaml) retenus, ex. ?choix=palette:charte,sous-menus:pastel — Proposition seulement.
   var CHOIX = {};
   (params.get('choix') || '').split(',').forEach(function (c) {
@@ -81,7 +95,10 @@
   }
 
   // Production : un fichier non capturé (ex. une page statique) est pris dans custom-af-content/.
+  // Brouillon : un fichier modifié dans l'éditeur remplace celui du dépôt.
   function fetchContent(path) {
+    var b = brouillonText(path);
+    if (b !== undefined) return Promise.resolve(b);
     return fetchText(path).catch(function (e) {
       if (VERSION === 'production' && path.indexOf(CONTENT) === 0) return fetchText(PROPOSITION + path.slice(CONTENT.length));
       throw e;
@@ -252,7 +269,7 @@
 
   // Lit preview/choix.yaml et retient, pour chaque choix, la réponse demandée (sinon la première).
   function loadChoix() {
-    if (VERSION === 'production') return Promise.resolve();
+    if (VERSION === 'production') return Promise.resolve();   // les choix s'appliquent à Proposition et Brouillon
     return fetchText('preview/choix.yaml').then(function (text) {
       var r = yamlLoad(text, 'preview/choix.yaml');
       if (r.error || !Array.isArray(r.value)) { warnings.menu.push(r.error || 'preview/choix.yaml : liste attendue'); return; }
@@ -405,8 +422,8 @@
 
   // Charge menus.yaml (et le recharge en local quand il change). Erreur de syntaxe : signalée, menu inchangé.
   function loadMenu() {
-    return fetch(CONTENT + 'menus.yaml', { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.text() : null; })
+    return fetchContent(CONTENT + 'menus.yaml')
+      .catch(function () { return null; })
       .then(function (text) {
         if (text === null) { if (lastMenu === null) setupDropdowns(); lastMenu = ''; return; }
         if (text === lastMenu) return;
@@ -585,6 +602,15 @@
     window.open(new URL(href, ORIGIN + '/').href, '_blank', 'noopener');
   }, true);
 
+  // Brouillon modifié dans l'éditeur : la visionneuse prévient, l'aperçu se recharge (sans recharger la page)
+  var currentEntry = null;
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || d.source !== 'reso-viewer' || d.type !== 'brouillon' || VERSION !== 'brouillon' || !currentEntry) return;
+    load(currentEntry).catch(function (err) { showError(err.message); });
+    loadMenu();
+  });
+
   // Raccourcis de la visionneuse (C : comparer, B : basculer), aussi quand l'aperçu a le focus
   document.addEventListener('keydown', function (e) {
     if (window.parent === window || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -604,6 +630,7 @@
       if (!document.getElementById('tpl-' + entry.type)) throw new Error('Type de page inconnu dans preview/pages.yaml : « ' + entry.type + ' » (attendu : page-statique ou accueil).');
       if (!entry.contenu) throw new Error('Page « ' + pageId + ' » : « contenu » manquant dans preview/pages.yaml.');
       document.title = entry.titre + ' · aperçu Reso';
+      currentEntry = entry;
       // Changement de breakpoint (la visionneuse change la largeur) : autres captures, autres classes Vue.
       var bpName = currentBreakpoint().nom;
       window.addEventListener('resize', function () {

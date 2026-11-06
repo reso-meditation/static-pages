@@ -9,6 +9,7 @@
   var TYPES = { 'page-statique': 'Page statique', 'accueil': 'Accueil (widgets)' };
   var VERSIONS = [
     { id: 'proposition', titre: 'Proposition', detail: 'custom-af-content/, avec les choix ci-dessous' },
+    { id: 'brouillon', titre: 'Brouillon', detail: 'la Proposition avec vos modifications (✎ Éditer), gardées dans ce navigateur' },
     { id: 'production', titre: 'Production', detail: 'ce qui est en ligne sur reso.co (capture)' }
   ];
   var $ = function (id) { return document.getElementById(id); };
@@ -30,7 +31,7 @@
   function decodeSide(str, fallback) {
     if (!str) return fallback;
     var parts = str.split('~');
-    var side = { v: parts[0] === 'production' ? 'production' : 'proposition', c: {} };
+    var side = { v: ['production', 'brouillon'].indexOf(parts[0]) >= 0 ? parts[0] : 'proposition', c: {} };
     (parts[1] || '').split('.').forEach(function (p) {
       var i = p.indexOf(':');
       if (i > 0) side.c[p.slice(0, i)] = p.slice(i + 1);
@@ -71,11 +72,11 @@
     if (side.v === 'production') return 'Production (en ligne)';
     var diff = questions.filter(function (q) { return selected(side, q) !== q.options[0].id; })
       .map(function (q) { return optionTitle(q, selected(side, q)); });
-    return 'Proposition' + (diff.length ? ' · ' + diff.join(', ') : '');
+    return (side.v === 'brouillon' ? 'Brouillon' : 'Proposition') + (diff.length ? ' · ' + diff.join(', ') : '');
   }
   function summary(side) {
     if (side.v === 'production') return 'Production : la version en ligne.';
-    return questions.map(function (q) { return '- ' + q.question + ' : ' + optionTitle(q, selected(side, q)); }).join('\n');
+    return (side.v === 'brouillon' ? '(Brouillon : modifications faites dans l\'éditeur, non publiées)\n' : '') + questions.map(function (q) { return '- ' + q.question + ' : ' + optionTitle(q, selected(side, q)); }).join('\n');
   }
 
   function renderChoices() {
@@ -154,6 +155,7 @@
     var q = new URLSearchParams({ page: state.page, cote: sd });
     if (s.v === 'production') q.set('version', 'production');
     else {
+      if (s.v === 'brouillon') q.set('version', 'brouillon');
       var c = questions.filter(function (x) { return selected(s, x) !== x.options[0].id; })
         .map(function (x) { return x.id + ':' + selected(s, x); });
       if (c.length) q.set('choix', c.join(','));
@@ -250,6 +252,22 @@
     showWarnings();
   });
 
+  // ---------- Éditeur (preview/editor.js) ----------
+  // Brouillon modifié : les aperçus en version Brouillon se rechargent.
+  window.addEventListener('brouillon-change', function () {
+    stage.querySelectorAll('.pane').forEach(function (pane) {
+      if (state[pane.dataset.side] && state[pane.dataset.side].v === 'brouillon') {
+        var f = pane.querySelector('iframe');
+        if (f && f.contentWindow) f.contentWindow.postMessage({ source: 'reso-viewer', type: 'brouillon' }, '*');
+      }
+    });
+  });
+  // À l'ouverture de l'éditeur, le réglage A montre le brouillon (s'il montrait la Proposition).
+  window.addEventListener('editor-open', function () {
+    if (state.a.v === 'proposition') { state.a.v = 'brouillon'; update(); }
+  });
+  window.addEventListener('viewer-toast', function (e) { toast(e.detail); });
+
   // ---------- Copie ----------
   function toast(msg) {
     var t = $('toast');
@@ -314,6 +332,7 @@
     $('page-type').textContent = TYPES[entry.type] || entry.type;
     $('open-live').href = entry.url || 'https://www.reso.co/';
     document.title = entry.titre + ' · Pages Reso';
+    window.dispatchEvent(new CustomEvent('viewer-page', { detail: entry.id }));
     renderChoices();
     renderPanes();
     showWarnings();

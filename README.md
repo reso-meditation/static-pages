@@ -126,15 +126,34 @@ La visionneuse permet de :
   `preview/pages.yaml`) reste dans l'aperçu, tout autre lien ouvre reso.co dans un nouvel onglet ;
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
 - comparer la **Proposition** (`custom-af-content/`) et la **Production** (ce qui est en ligne) ;
+- **éditer** les fichiers de `custom-af-content/` dans le navigateur (brouillon, voir plus bas) ;
 - essayer les **choix** de `preview/choix.yaml` (panneau « Choix ») ;
 - copier le contenu à coller dans AlumnForce (`custom.css`, un bouton par widget « html libre ») ;
 - voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil, widget inconnu,
   erreur dans un fichier YAML…).
 
+### Éditer dans le navigateur (brouillon)
+
+**✎ Éditer** ouvre à gauche un éditeur (CodeMirror) avec un onglet par fichier de
+`custom-af-content/` : ceux de la page affichée d'abord, puis `custom.css`, `menus.yaml`, etc.
+Un point signale un fichier modifié. Les modifications forment un **brouillon** :
+
+- jamais écrit dans le dépôt : il est gardé dans ce navigateur (`localStorage`), et revient
+  après un rechargement ; il n'est pas visible des autres (un lien partagé montre la Proposition) ;
+- affiché en direct dans la version **Brouillon** (choisie automatiquement pour A à l'ouverture
+  de l'éditeur), utilisable dans les comparaisons et avec les choix ;
+- **Copier** : le fichier modifié en entier ; **Différences** : les lignes changées par rapport au
+  dépôt ; **Rétablir** : revenir au fichier du dépôt ; **Nouveau fichier** : par exemple
+  `html-widget6.html`, à ajouter ensuite dans `accueil.yaml` ; **Abandonner le brouillon** : tout
+  effacer.
+
+Pour garder une modification, copier le fichier dans `custom-af-content/` (ou le transmettre)
+et commiter. Si le fichier du dépôt change pendant qu'un brouillon le modifie, l'éditeur le signale.
+
 ### Comparer et choisir (réunions)
 
-Deux réglages, **A** et **B**, chacun composé d'une version (Proposition ou Production) et, pour la
-Proposition, d'une réponse à chaque choix. Par défaut : A = Proposition, B = Production.
+Deux réglages, **A** et **B**, chacun composé d'une version (Proposition, Brouillon ou Production)
+et, sauf pour la Production, d'une réponse à chaque choix. Par défaut : A = Proposition, B = Production.
 
 - **◧ Comparer** (touche `C`) : A et B côte à côte, défilement synchronisé.
 - **⇄ Basculer** (touche `B`) : échange A et B ; seul, c'est un « avant / après » instantané.
