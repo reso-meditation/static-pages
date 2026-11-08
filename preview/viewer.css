@@ -178,7 +178,60 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 body.resizing { user-select: none; }
 body.resizing iframe { pointer-events: none; }
 
-/* Différences brouillon / dépôt */
+/* Barre de la version : choix de la version, édition, enregistrement ; état du brouillon */
+.draft-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 8px 16px;
+  font-size: 13px;
+  background: #f4f7f1;
+  color: #2f4a26;
+  border-bottom: 1px solid #dfe8d8;
+}
+.draft-bar.readonly { background: #f6f5f1; color: var(--muted); border-bottom-color: var(--line); }
+.draft-bar.dirty { background: var(--warn-bg); color: var(--warn-ink); border-bottom-color: #f0dc9c; }
+.draft-bar.dirty #draft-text::before { content: "● "; color: #d08a00; }
+#draft-text { flex: 1 1 280px; }
+.version-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.version-bar .page-select { max-width: 260px; }
+.version-bar .btn { padding: 5px 10px; }
+.version-bar .btn:disabled { opacity: .4; }
+.version-label { font-weight: 600; font-size: 13px; color: var(--ink); }
+
+/* Production : lecture seule, pas d'éditeur */
+body.mode-production .editor, body.mode-production .editor-resizer { display: none; }
+
+/* Boîtes de dialogue : question, versions enregistrées */
+.ask-dialog, .versions-dialog {
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  color: var(--ink);
+}
+.ask-dialog::backdrop, .versions-dialog::backdrop { background: rgba(0,0,0,.35); }
+.ask-dialog { width: min(440px, calc(100vw - 32px)); }
+.ask-dialog form { display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+.ask-dialog strong { font-size: 15px; }
+.ask-dialog p { margin: 0; color: var(--muted); }
+.ask-dialog input { font: inherit; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; }
+.ask-dialog input:focus-visible { outline: 2px solid var(--purple); outline-offset: 1px; }
+.ask-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.versions-dialog { width: min(640px, calc(100vw - 32px)); max-height: 80vh; }
+.versions-dialog header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.versions-dialog header strong { flex: 1; }
+.versions-dialog > .hint { margin: 10px 14px 0; }
+.versions-empty { margin: 14px; color: var(--muted); }
+.versions-list { list-style: none; margin: 0; padding: 6px 0 10px; }
+.versions-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 14px; border-top: 1px solid var(--line); }
+.versions-list li:first-child { border-top: 0; }
+.version-info { flex: 1; min-width: 180px; display: flex; flex-direction: column; }
+.version-info .tag { margin-left: 8px; font-weight: normal; }
+.version-info small { color: var(--muted); }
+
+/* Différences avec le dépôt */
 .diff-dialog {
   width: min(1000px, 92vw);
   max-height: 86vh;
@@ -247,4 +300,5 @@ body.panel-closed .panel { display: none; }
   body { flex-direction: column; }
   .panel { width: auto; max-height: 45vh; border-left: 0; border-top: 1px solid var(--line); }
   .stage { padding: 8px; }
+  #page-type { display: none; }
 }

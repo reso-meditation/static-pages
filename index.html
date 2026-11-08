@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pages Reso</title>
   <link rel="icon" href="data:,">
-  <!-- CodeMirror (éditeur du brouillon) -->
+  <!-- CodeMirror (éditeur des fichiers) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css">
-  <link rel="stylesheet" href="preview/viewer.css">
+  <link rel="stylesheet" href="preview/viewer.css?r=5">
 </head>
 <body>
-  <aside id="editor" class="editor" aria-label="Éditer le brouillon" hidden>
+  <aside id="editor" class="editor" aria-label="Éditer les fichiers" hidden>
     <div class="editor-head">
       <strong>Éditer</strong>
       <span id="editor-status" class="hint"></span>
@@ -25,7 +25,7 @@
       <button type="button" id="ed-diff" class="btn">Différences</button>
       <button type="button" id="ed-revert" class="btn">Rétablir</button>
       <button type="button" id="ed-new" class="btn">Nouveau fichier</button>
-      <button type="button" id="ed-discard" class="link-btn">Abandonner le brouillon</button>
+      <button type="button" id="ed-discard" class="link-btn" title="Rétablir tous les fichiers modifiés tels qu'ils sont dans le dépôt">Tout rétablir</button>
     </div>
   </aside>
   <div id="editor-resizer" class="editor-resizer" role="separator" aria-orientation="vertical" title="Glisser pour redimensionner" hidden></div>
@@ -44,10 +44,22 @@
           <button type="button" data-w="768">Tablette</button>
           <button type="button" data-w="390">Mobile</button>
         </div>
-        <button type="button" id="toggle-editor" class="btn" aria-pressed="false" aria-controls="editor" title="Modifier les fichiers de custom-af-content/ dans un brouillon">✎ Éditer</button>
         <button type="button" id="toggle-panel" class="btn" aria-pressed="true" aria-controls="panel">⚙ Choix</button>
         <a id="open-live" class="btn" target="_blank" rel="noopener">Voir sur reso.co</a>
       </div>
+    </div>
+    <!-- Version affichée : choix de la version, édition, enregistrement, et son état -->
+    <div id="draft-bar" class="draft-bar">
+      <div class="version-bar" role="group" aria-label="Version">
+        <label for="version-select" class="version-label">Version</label>
+        <select id="version-select" class="page-select" title="Version affichée : Production et Proposition (lecture seule), ou une de vos versions"></select>
+        <button type="button" id="toggle-editor" class="btn" aria-pressed="false" aria-controls="editor">✎ Éditer</button>
+        <button type="button" id="version-save" class="btn primary">Enregistrer</button>
+        <button type="button" id="version-saveas" class="btn" title="Enregistrer ce qui est affiché dans une nouvelle version">Enregistrer sous…</button>
+        <button type="button" id="version-discard" class="btn" title="Abandonner le brouillon : revenir à la version enregistrée">Annuler les modifications</button>
+        <button type="button" id="version-more" class="btn" title="Mes versions : ouvrir, renommer, supprimer">Mes versions</button>
+      </div>
+      <span id="draft-text" role="status"></span>
     </div>
     <div id="warnings" class="warnings" hidden></div>
     <div id="stage" class="stage"></div>
@@ -60,9 +72,9 @@
     </div>
     <div id="choices" class="choices"></div>
     <div class="panel-actions">
-      <button type="button" id="copy-summary" class="btn">Copier le résumé</button>
-      <button type="button" id="copy-link" class="btn">Copier le lien</button>
-      <button type="button" id="reset" class="link-btn">Réinitialiser</button>
+      <button type="button" id="copy-link" class="btn primary" title="Lien qui contient toute la version affichée : choix et fichiers modifiés">Copier le lien de partage</button>
+      <button type="button" id="copy-summary" class="btn" title="Liste des choix et lien de partage, à coller dans un compte rendu">Copier le résumé</button>
+      <button type="button" id="reset" class="link-btn" title="Défaire tous les choix (leurs modifications sont retirées des fichiers)">Choix par défaut</button>
     </div>
   </aside>
 
@@ -73,6 +85,26 @@
       <button type="button" id="diff-close" class="btn">Fermer</button>
     </header>
     <div id="diff-body" class="diff-body"></div>
+  </dialog>
+
+  <dialog id="ask-dialog" class="ask-dialog">
+    <form id="ask-form" method="dialog">
+      <strong id="ask-title"></strong>
+      <p id="ask-text"></p>
+      <input id="ask-input" type="text" autocomplete="off" spellcheck="false" aria-labelledby="ask-text">
+      <div id="ask-buttons" class="ask-buttons"></div>
+    </form>
+  </dialog>
+
+  <dialog id="versions-dialog" class="versions-dialog">
+    <header>
+      <strong>Mes versions</strong>
+      <button type="button" id="versions-saveas" class="btn">Enregistrer sous…</button>
+      <button type="button" id="versions-close" class="btn">Fermer</button>
+    </header>
+    <p class="hint">Gardées dans ce navigateur seulement (pas dans le dépôt). Pour en donner une à quelqu'un : ouvrez-la, puis « Copier le lien de partage » dans le panneau Choix.</p>
+    <p id="versions-empty" class="versions-empty">Aucune version : modifiez la Proposition, puis « Enregistrer sous… ».</p>
+    <ul id="versions-list" class="versions-list"></ul>
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -89,7 +121,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/jump-to-line.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
-  <script src="preview/editor.js"></script>
-  <script src="preview/viewer.js"></script>
+  <script src="preview/choix-fichiers.js?r=5"></script>
+  <script src="preview/versions.js?r=5"></script>
+  <script src="preview/editor.js?r=5"></script>
+  <script src="preview/viewer.js?r=5"></script>
 </body>
 </html>

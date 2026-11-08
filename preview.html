@@ -23,8 +23,8 @@
   <!-- custom.css (éditeur CSS AlumnForce) : injecté ici par preview/preview.js,
        suivi des styles que Vue ajoute sur reso.co (preview/site/styles.<type>.html) -->
   <style id="custom-css"></style>
-  <!-- Repère : avant lui, le CSS des choix retenus (preview/choix/) ; après lui, les styles de Vue -->
-  <meta id="choix-fin">
+  <!-- Repère : les styles de Vue sont insérés après lui -->
+  <meta id="styles-vue">
   <!-- Propre à l'aperçu (n'existe pas sur reso.co) : emplacement de la barre membre.
        Même règle que main.build.css : à partir de 600 px, .af-push-content a une marge gauche de 60 px. -->
   <style>
@@ -93,6 +93,6 @@
 
   <!-- Lecture des fichiers YAML (outil d'aperçu uniquement) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-  <script src="preview/preview.js"></script>
+  <script src="preview/preview.js?r=5"></script>
 </body>
 </html>

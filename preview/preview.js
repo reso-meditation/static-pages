@@ -7,33 +7,25 @@
   var params = new URLSearchParams(location.search);
   var pageId = params.get('page');
   var isLocal = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname);
-  // Version affichée : « proposition » (custom-af-content/, ce qu'on modifie), « brouillon » (la
-  // proposition + les modifications faites dans l'éditeur de la visionneuse, voir preview/editor.js)
-  // ou « production » (preview/site/production/, ce qui est en ligne, capturé par tools/capture-site-chrome.js).
-  var VERSION = ['production', 'brouillon'].indexOf(params.get('version')) >= 0 ? params.get('version') : 'proposition';
+  // Version affichée : par défaut celle de la visionneuse, c'est-à-dire custom-af-content/ avec
+  // les fichiers modifiés de la version regardée (voir preview/versions.js ; les choix sont déjà
+  // dans ces fichiers) ; ou « production » (preview/site/production/, ce qui est en ligne,
+  // capturé par tools/capture-site-chrome.js).
+  var VERSION = params.get('version') === 'production' ? 'production' : 'travail';
   var PROPOSITION = 'custom-af-content/';
   var CONTENT = VERSION === 'production' ? 'preview/site/production/' : PROPOSITION;
-  var BROUILLON_KEY = 'reso-brouillon-v1';
 
-  // Brouillon : texte modifié d'un fichier, lu dans la visionneuse (iframe) ou, aperçu ouvert seul,
-  // dans la sauvegarde du navigateur. undefined : pas de modification, on lit le fichier du dépôt.
-  function brouillonText(path) {
-    if (VERSION !== 'brouillon') return undefined;
+  // Texte modifié d'un fichier, lu dans la visionneuse. undefined : pas de modification (ou aperçu
+  // ouvert sans la visionneuse), on lit le fichier du dépôt.
+  function travailText(path) {
+    if (VERSION === 'production') return undefined;
     var files = null;
-    try { if (window.parent !== window && window.parent.__resoBrouillon) files = window.parent.__resoBrouillon.files; } catch (e) {}
-    if (!files) {
-      try { files = (JSON.parse(localStorage.getItem(BROUILLON_KEY)) || {}).files; } catch (e) {}
-    }
+    // visionneuse : parent (iframe) ou opener (aperçu ouvert seul par ↗, avec rel="opener")
+    [window.parent !== window ? window.parent : null, window.opener].forEach(function (w) {
+      try { if (!files && w && w.ResoTravail) files = w.ResoTravail.travail.files; } catch (e) {}
+    });
     return files && typeof files[path] === 'string' ? files[path] : undefined;
   }
-  // Choix (preview/choix.yaml) retenus, ex. ?choix=palette:charte,sous-menus:pastel — Proposition seulement.
-  var CHOIX = {};
-  (params.get('choix') || '').split(',').forEach(function (c) {
-    var i = c.indexOf(':');
-    if (i > 0) CHOIX[c.slice(0, i)] = c.slice(i + 1);
-  });
-  var choix = { css: [], menus: [], accueil: [] };   // CSS, modifications du menu et de l'accueil des réponses retenues
-
   var main = document.getElementById('main-content');
   var customCss = document.getElementById('custom-css');
   var captures = {};                      // 'slider.mobile' → HTML capturé
@@ -95,9 +87,9 @@
   }
 
   // Production : un fichier non capturé (ex. une page statique) est pris dans custom-af-content/.
-  // Brouillon : un fichier modifié dans l'éditeur remplace celui du dépôt.
+  // Sinon : un fichier modifié dans l'éditeur remplace celui du dépôt.
   function fetchContent(path) {
-    var b = brouillonText(path);
+    var b = travailText(path);
     if (b !== undefined) return Promise.resolve(b);
     return fetchText(path).catch(function (e) {
       if (VERSION === 'production' && path.indexOf(CONTENT) === 0) return fetchText(PROPOSITION + path.slice(CONTENT.length));
@@ -135,43 +127,13 @@
     list.forEach(function (w, i) {
       if (w.widget === 'slider' && i > 0) bad.push(file + ' : le slider est toujours en tête sur reso.co (affiché en premier).');
     });
-    list = patchWidgets(list, bad);
     warnings.widgets = bad;
     lastWidgets.list = list;
     return list;
   }
 
-  // Modifications de l'accueil par les réponses retenues (preview/choix.yaml, clé « accueil ») :
-  //   retirer:   [ réf ]                          réf : nom du widget (slider…) ou fichier html (html-widget2.html)
-  //   remplacer: { réf: "preview/choix/….html" }  autre contenu pour un widget « html libre »
-  //   ajouter:   [ { html: "preview/choix/….html", titre, apres: réf | avant: réf } ]  (sans réf : à la fin)
-  // Une réf qui commence par « ? » est facultative (pas d'avertissement si elle est absente).
-  function patchWidgets(list, bad) {
-    function ref(w) { return w.widget || w.html; }
-    function index(r) {
-      var optional = r.charAt(0) === '?';
-      var name = optional ? r.slice(1).trim() : r;
-      var i = list.findIndex(function (w) { return ref(w) === name; });
-      if (i < 0 && !optional) bad.push('preview/choix.yaml : widget introuvable dans l\'accueil « ' + name + ' »');
-      return i;
-    }
-    choix.accueil.forEach(function (a) {
-      (a.retirer || []).forEach(function (r) { var i = index(r); if (i >= 0) list.splice(i, 1); });
-      Object.keys(a.remplacer || {}).forEach(function (r) {
-        var i = index(r);
-        if (i >= 0) list[i] = { html: a.remplacer[r], titre: list[i].titre };
-      });
-      (a.ajouter || []).forEach(function (n) {
-        var w = { html: n.html, titre: n.titre };
-        if (n.apres) { var i = index(n.apres); list.splice(i >= 0 ? i + 1 : list.length, 0, w); }
-        else if (n.avant) { var j = index(n.avant); list.splice(j >= 0 ? j : list.length, 0, w); }
-        else list.push(w);
-      });
-    });
-    return list;
-  }
-  // Fichier d'un widget « html libre » : dans custom-af-content/, ou dans preview/choix/ (réponses)
-  function htmlPath(w) { return /^preview\//.test(w.html) ? w.html : CONTENT + w.html; }
+  // Fichier d'un widget « html libre » (dans custom-af-content/)
+  function htmlPath(w) { return CONTENT + w.html; }
 
   // Fichiers HTML de custom-af-content/ qui composent la page.
   function htmlFiles(entry, widgets) {
@@ -219,6 +181,7 @@
     widgets.filter(function (w) { return w.widget !== 'slider'; }).forEach(function (w, i) {
       var item = document.createElement('div');
       item.className = i === 0 ? 'is-draggable' : 'mt-6 is-draggable';
+      item.dataset.ref = w.html || w.widget;   // repère pour garder la position de défilement (keepScroll)
       if (w.html) {
         var widget = document.getElementById('tpl-widget-html').content.cloneNode(true);
         widget.querySelector('[data-slot]').appendChild(htmlNode(files[htmlPath(w)]));
@@ -230,6 +193,46 @@
       list.appendChild(item);
     });
     return frag;
+  }
+
+  // Garder la position de défilement quand la page est reconstruite (choix, fichier modifié) :
+  // on retient le widget en haut de l'écran et son décalage, et on l'y remet ; la hauteur de la page
+  // est maintenue le temps que les images se chargent (sinon le défilement est ramené plus haut),
+  // et l'ajustement est refait à chaque image chargée, sauf si l'utilisateur fait défiler entre-temps.
+  var scrollGuard = null;
+  function keepScroll() {
+    if (scrollGuard) scrollGuard.stop();
+    var y = window.scrollY, anchor = null;
+    main.querySelectorAll('[data-ref]').forEach(function (el) {
+      if (anchor) return;
+      var r = el.getBoundingClientRect();
+      if (r.bottom > 0) anchor = { ref: el.dataset.ref, top: r.top };
+    });
+    if (y === 0) anchor = null;   // en haut de la page : on y reste
+    main.style.minHeight = main.offsetHeight + 'px';
+    return function () {
+      var stopped = false, timer = null;
+      function place() {
+        if (stopped) return;
+        var el = anchor && main.querySelector('[data-ref="' + CSS.escape(anchor.ref) + '"]');
+        window.scrollTo(0, el ? window.scrollY + el.getBoundingClientRect().top - anchor.top : y);
+      }
+      function stop() {
+        if (stopped) return;
+        stopped = true;
+        clearTimeout(timer);
+        main.style.minHeight = '';
+        ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { window.removeEventListener(t, stop, true); });
+        main.removeEventListener('load', place, true);
+        scrollGuard = null;
+      }
+      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { window.addEventListener(t, stop, true); });
+      main.addEventListener('load', place, true);   // chaque image chargée
+      place();
+      var pending = [].filter.call(main.querySelectorAll('img'), function (img) { return !img.complete; }).length;
+      timer = setTimeout(function () { place(); stop(); }, pending ? 4000 : 300);
+      scrollGuard = { stop: stop };
+    };
   }
 
   function render(entry, css, files, widgets) {
@@ -244,9 +247,9 @@
     if (key === last.key) return notifyWarnings();
     last.key = key;
 
-    var y = window.scrollY;
+    var restore = keepScroll();
     main.replaceChildren(entry.type === 'accueil' ? renderAccueil(widgets, files, bp) : renderStatic(entry, files));
-    window.scrollTo(0, y);
+    restore();
 
     warnings.contenu = [];
     widgets.forEach(function (w) {
@@ -264,10 +267,8 @@
 
   function load(entry) {
     var widgetsText = entry.type === 'accueil' ? fetchContent(CONTENT + entry.contenu) : Promise.resolve(null);
-    var choixCss = Promise.all(choix.css.map(function (f) { return fetchText(f).catch(function () { return ''; }); }));
-    return Promise.all([fetchContent(CONTENT + 'custom.css'), widgetsText, choixCss]).then(function (r) {
+    return Promise.all([fetchContent(CONTENT + 'custom.css'), widgetsText]).then(function (r) {
       var css = r[0];
-      applyChoixCss(r[2]);
       var widgets = entry.type === 'accueil' ? readWidgets(entry, r[1]) : [];
       var paths = htmlFiles(entry, widgets);
       return Promise.all([
@@ -279,79 +280,6 @@
         render(entry, css, files, widgets);
       });
     });
-  }
-
-  // CSS des réponses retenues : un <style> par fichier (un @import doit être en tête de sa feuille),
-  // entre custom.css et le repère #choix-fin, avant les styles ajoutés par Vue (comme le serait
-  // ce CSS une fois intégré à custom.css).
-  var lastChoixCss = null;
-  function applyChoixCss(texts) {
-    var key = texts.join('\u0000');
-    if (key === lastChoixCss) return;
-    lastChoixCss = key;
-    document.querySelectorAll('style[data-choix]').forEach(function (e) { e.remove(); });
-    var end = document.getElementById('choix-fin');
-    texts.forEach(function (t, i) {
-      var st = document.createElement('style');
-      st.setAttribute('data-choix', choix.css[i]);
-      st.textContent = absolutize(t);
-      end.parentNode.insertBefore(st, end);
-    });
-    syncScrollableNav();
-  }
-
-  // Lit preview/choix.yaml et retient, pour chaque choix, la réponse demandée (sinon la première).
-  function loadChoix() {
-    if (VERSION === 'production') return Promise.resolve();   // les choix s'appliquent à Proposition et Brouillon
-    return fetchText('preview/choix.yaml').then(function (text) {
-      var r = yamlLoad(text, 'preview/choix.yaml');
-      if (r.error || !Array.isArray(r.value)) { warnings.menu.push(r.error || 'preview/choix.yaml : liste attendue'); return; }
-      r.value.forEach(function (q) {
-        var opts = q.options || [];
-        var o = opts.find(function (x) { return x.id === CHOIX[q.id]; }) || opts[0];
-        if (!o) return;
-        if (o.css) choix.css.push('preview/choix/' + o.css);
-        if (o.menus) choix.menus.push(o.menus);
-        if (o.accueil) choix.accueil.push(o.accueil);
-      });
-    }).catch(function () {});
-  }
-
-  // Applique au menu les modifications des réponses retenues (renommer, retirer), sur une copie.
-  function patchMenu(items) {
-    if (!choix.menus.length) return items;
-    var copy = JSON.parse(JSON.stringify(items));
-    function find(path) {
-      var parts = path.split('>').map(function (t) { return t.trim(); });
-      var list = copy, item = null, parent = null;
-      for (var i = 0; i < parts.length; i++) {
-        parent = list;
-        item = (list || []).find(function (it) { return it.titre === parts[i]; });
-        if (!item) return null;
-        list = item['sous-menu'];
-      }
-      return { item: item, list: parent };
-    }
-    // Un chemin qui commence par « ? » est facultatif : pas d'avertissement s'il n'existe pas
-    // (utile quand une autre réponse a déjà modifié cette partie du menu).
-    function each(paths, fn) {
-      paths.forEach(function (path) {
-        var optional = path.charAt(0) === '?';
-        var p = optional ? path.slice(1).trim() : path;
-        var f = find(p);
-        if (f) fn(f, p);
-        else if (!optional) warnings.menu.push('preview/choix.yaml : entrée introuvable « ' + p + ' »');
-      });
-    }
-    choix.menus.forEach(function (m) {
-      // remplacer : { "Catégorie": [ nouvelles entrées du sous-menu ] }
-      each(Object.keys(m.remplacer || {}), function (f, p) {
-        f.item['sous-menu'] = JSON.parse(JSON.stringify(m.remplacer[p] || m.remplacer['?' + p] || []));
-      });
-      each(Object.keys(m.renommer || {}), function (f, p) { f.item.titre = m.renommer[p] || m.renommer['?' + p]; });
-      each(m.retirer || [], function (f) { f.list.splice(f.list.indexOf(f.item), 1); });
-    });
-    return copy;
   }
 
   // En-tête et pied de page de reso.co, capturés par tools/capture-site-chrome.js.
@@ -372,7 +300,7 @@
   // CSS chargés à la demande), capturées par tools/capture-site-chrome.js. Insérées au même endroit.
   function loadSiteStyles(entry) {
     return fetchText('preview/site/styles.' + entry.type + '.html')
-      .then(function (html) { var end = document.getElementById('choix-fin'); end.parentNode.insertBefore(htmlNode(html), end.nextSibling); })
+      .then(function (html) { var end = document.getElementById('styles-vue'); end.parentNode.insertBefore(htmlNode(html), end.nextSibling); })
       .catch(function (e) { console.warn('Styles Vue indisponibles :', e.message); });
   }
 
@@ -489,7 +417,7 @@
           });
         })(items, 0);
         warnings.menu = bad.map(function (b) { return 'menus.yaml : ' + b; });
-        applyMenu(patchMenu(items.filter(function (it) { return it && it.titre; })));
+        applyMenu(items.filter(function (it) { return it && it.titre; }));
         notifyWarnings();
       })
       .catch(function (e) { console.warn('menus.yaml indisponible :', e.message); setupDropdowns(); });
@@ -650,11 +578,11 @@
     window.open(new URL(href, ORIGIN + '/').href, '_blank', 'noopener');
   }, true);
 
-  // Brouillon modifié dans l'éditeur : la visionneuse prévient, l'aperçu se recharge (sans recharger la page)
+  // Fichiers modifiés dans l'éditeur : la visionneuse prévient, l'aperçu se recharge (sans recharger la page)
   var currentEntry = null;
   window.addEventListener('message', function (e) {
     var d = e.data;
-    if (!d || d.source !== 'reso-viewer' || d.type !== 'brouillon' || VERSION !== 'brouillon' || !currentEntry) return;
+    if (!d || d.source !== 'reso-viewer' || d.type !== 'travail' || VERSION === 'production' || !currentEntry) return;
     load(currentEntry).catch(function (err) { showError(err.message); });
     loadMenu();
   });
@@ -679,9 +607,7 @@
         bpName = currentBreakpoint().nom;
         load(entry).catch(function (e) { showError(e.message); });
       });
-      return loadChoix().then(function () {
-        return Promise.all([loadSiteStyles(entry), loadSiteChrome(), load(entry)]);
-      }).then(function () {
+      return Promise.all([loadSiteStyles(entry), loadSiteChrome(), load(entry)]).then(function () {
         // En local : rechargement automatique quand custom.css ou une page change.
         if (isLocal) setInterval(function () {
           load(entry).catch(function () {});

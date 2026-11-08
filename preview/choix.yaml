@@ -1,14 +1,15 @@
 # Choix à trancher (réunion de communication interne), proposés dans la visionneuse (panneau « Choix »).
-# Ils s'appliquent aux versions « Proposition » et « Brouillon », pas à « Production ».
+# Cocher une réponse modifie les fichiers de la version affichée (preview/choix-fichiers.js) ;
+# en choisir une autre défait ces modifications. Pas de choix en Production.
 #
 # Chaque choix :
-#   id:        identifiant (dans l'adresse de la visionneuse)
+#   id:        identifiant (dans les commentaires CHOIX de custom.css)
 #   groupe:    (facultatif) titre de groupe affiché au-dessus de la question dans le panneau
 #   question:  intitulé affiché
 #   options:   les réponses possibles ; la PREMIÈRE est celle de custom-af-content/ (par défaut)
 #     - id, titre, detail (facultatif)
 #       couleurs:  (facultatif) pastilles affichées à côté du titre
-#       css:       (facultatif) fichier de preview/choix/, ajouté juste après custom.css
+#       css:       (facultatif) fichier de preview/choix/, ajouté à custom.css (ses @import en tête)
 #       menus:     (facultatif) modifications du menu (custom-af-content/menus.yaml) :
 #                    remplacer: { "Catégorie": [ entrées du sous-menu, au format de menus.yaml ] }
 #                    renommer:  { "Catégorie > Entrée": "Nouveau titre" }
@@ -18,11 +19,12 @@
 #                    retirer:   [ réf ]                         réf : nom du widget (slider…) ou fichier html
 #                    remplacer: { réf: "preview/choix/….html" }  autre contenu d'un widget « html libre »
 #                    ajouter:   [ { html: "preview/choix/….html", titre, avant: réf | apres: réf } ]
+#                               (le widget ajouté devient custom-af-content/html-widget-<nom>.html)
 #   Un chemin ou une réf qui commence par « ? » est facultatif (pas d'avertissement s'il n'existe pas).
-#   Les CSS s'empilent, et les modifications s'appliquent, dans l'ordre des questions de ce fichier.
+#   Dans custom.css, les blocs des réponses sont rangés dans l'ordre des questions de ce fichier.
 #
-# Une réponse retenue s'intègre ensuite à custom-af-content/ (custom.css, menus.yaml, accueil.yaml,
-# widgets html) : en production, seul ce dossier compte.
+# Une réponse retenue en réunion : copier les fichiers modifiés (éditeur) dans custom-af-content/,
+# puis en faire la première réponse de sa question. En production, seul ce dossier compte.
 
 - id: palette
   groupe: Couleurs

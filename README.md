@@ -125,56 +125,103 @@ La visionneuse permet de :
   « Accueil » pour l'accueil, « Timer » pour le minuteur ; voir `url` et `liens` dans
   `preview/pages.yaml`) reste dans l'aperçu, tout autre lien ouvre reso.co dans un nouvel onglet ;
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
-- choisir la **version** : **Proposition** (`custom-af-content/`), **Brouillon** (vos modifications,
-  voir plus bas) ou **Production** (ce qui est en ligne) ;
-- **éditer** les fichiers de `custom-af-content/` dans le navigateur (brouillon, voir plus bas) ;
+- choisir la **version** affichée (menu en haut à droite, voir plus bas) ;
+- **éditer** les fichiers de `custom-af-content/` dans le navigateur ;
 - essayer les **choix** de `preview/choix.yaml` (panneau « Choix ») ;
 - voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil, widget inconnu,
   erreur dans un fichier YAML…).
 
-### Éditer dans le navigateur (brouillon)
+### Versions et brouillon
+
+**Ce qu'on voit est toujours exactement le contenu des fichiers** de la version affichée, ceux
+qu'on ouvre dans l'éditeur et qu'on copiera dans AlumnForce : les choix eux-mêmes s'écrivent dans
+les fichiers (voir « Choisir » plus bas).
+
+Tout ce qui concerne la version est regroupé dans la barre sous la barre d'outils :
+**Version** (menu), **✎ Éditer**, **Enregistrer**, **Enregistrer sous…**, **Annuler les
+modifications**, **Mes versions**, et une ligne qui dit où on en est.
+
+On regarde toujours **une version** :
+- **Production** : ce qui est en ligne (capture), en lecture seule, sans choix ni éditeur ;
+- **Proposition (dépôt)** : `custom-af-content/` tel quel, en lecture seule ;
+- **Mes versions** : enregistrées dans ce navigateur, modifiables.
+
+Cocher un choix ou modifier un fichier crée un **brouillon** de la version affichée : l'aperçu se
+met à jour tout de suite, la version est marquée d'une étoile (`V1 *`) et la barre passe au jaune.
+Chaque version a son propre brouillon, gardé dans ce navigateur : il survit aux rechargements, à
+la fermeture du navigateur et aux changements de version (on passe de l'une à l'autre sans rien
+perdre ni rien avoir à confirmer ; une étoile dans le menu signale chaque brouillon).
+- **Enregistrer** (ou Ctrl+S dans l'éditeur) : le brouillon remplace la version affichée, si elle
+  est modifiable (pas la Production ni la Proposition) ;
+- **Enregistrer sous…** : ce qui est affiché devient une nouvelle version, qui est alors affichée ;
+- **Annuler les modifications** : revenir à la version telle qu'elle est enregistrée ;
+- **Mes versions** : ouvrir, renommer, supprimer.
+
+L'adresse contient le nom de la version affichée (`#page=accueil&w=1366&v=V1`) ; ce lien ne
+fonctionne que dans ce navigateur. Rien n'est écrit dans le dépôt : versions et brouillons sont
+dans le `localStorage` du navigateur (`preview/versions.js`). Deux onglets de la visionneuse
+partagent les mêmes brouillons.
+
+### Partager une version
+
+**Copier le lien de partage** (panneau Choix) donne une adresse qui contient toute la version
+affichée, brouillon compris : son nom, ses choix et ses fichiers modifiés, compressés
+(`#page=accueil&w=1366&partage=…`). Un fichier modifié y figure comme liste de différences avec le
+dépôt quand c'est possible (le lien indique le commit de départ, et le fichier d'origine est repris
+sur GitHub si le dépôt a changé depuis), sinon en entier. Quelques choix donnent un lien d'un
+millier de caractères ; des fichiers entièrement réécrits, quelques dizaines de milliers (les
+navigateurs l'acceptent, certaines messageries le coupent).
+
+Ouvrir un lien de partage **ajoute** la version à « Mes versions » (« Reçu : … ») et l'affiche ;
+rien de ce qu'on avait n'est écrasé, brouillons compris. **Copier le résumé** donne la liste des
+choix et des fichiers modifiés, avec le lien, pour un compte rendu.
+
+### Éditer dans le navigateur
 
 **✎ Éditer** ouvre à gauche un éditeur (CodeMirror) avec un onglet par fichier de
 `custom-af-content/` : ceux de la page affichée d'abord, puis `custom.css`, `menus.yaml`, etc.
-Un point signale un fichier modifié. Les modifications forment un **brouillon** :
+Un point signale un fichier modifié par rapport au dépôt. Les modifications font partie du
+brouillon de la version affichée et s'affichent en direct.
 
-- jamais écrit dans le dépôt : il est gardé dans ce navigateur (`localStorage`), et revient
-  après un rechargement ; il n'est pas visible des autres (un lien partagé montre la Proposition) ;
-- affiché en direct dans la version **Brouillon** (choisie automatiquement à l'ouverture de
-  l'éditeur), avec les choix ;
-- **Copier** : le fichier modifié en entier ; **Différences** : les lignes changées par rapport au
-  dépôt ; **Rétablir** : revenir au fichier du dépôt ; **Nouveau fichier** : par exemple
-  `html-widget6.html`, à ajouter ensuite dans `accueil.yaml` ; **Abandonner le brouillon** : tout
-  effacer.
+- **Copier** : le fichier en entier, à coller dans AlumnForce ou dans `custom-af-content/` ;
+- **Différences** : les lignes changées par rapport au dépôt ;
+- **Rétablir** : revenir au fichier du dépôt ; **Tout rétablir** : tous les fichiers (et donc
+  les choix, qui sont dedans) ;
+- **Nouveau fichier** : par exemple `html-widget6.html`, à ajouter ensuite dans `accueil.yaml`.
 
-Pour garder une modification, copier le fichier dans `custom-af-content/` (ou le transmettre)
-et commiter. Si le fichier du dépôt change pendant qu'un brouillon le modifie, l'éditeur le signale.
+Si le fichier du dépôt change pendant qu'on le modifie, l'éditeur le signale.
 
 ### Choisir (réunions)
 
-Le panneau **Choix** donne la version affichée et, sauf pour la Production, une réponse à chaque
-question de `preview/choix.yaml`, regroupées sous des titres.
+Le panneau **Choix** donne une réponse à chaque question de `preview/choix.yaml`, regroupées sous
+des titres (pas en Production). **Cocher une réponse modifie les fichiers** de la version affichée
+(`preview/choix-fichiers.js`) :
+- le CSS de la réponse s'ajoute à `custom.css`, entre `/* ===== CHOIX <question> … */` et
+  `/* ===== FIN CHOIX <question> ===== */`, dans l'ordre des questions ; ses `@import` vont en
+  tête du fichier (ailleurs, le navigateur les ignore) ;
+- le menu (`menus.yaml`) et l'accueil (`accueil.yaml`) sont modifiés ligne à ligne, commentaires
+  gardés ; un widget ajouté devient un fichier `html-widget-<nom>.html` ;
+- choisir une autre réponse, ou la première, **défait** ces modifications, même si le fichier a été
+  modifié à la main entre-temps (si c'est impossible, un message le dit et rien ne change).
 
-- **Copier le résumé** : la liste des choix retenus, avec le lien, pour un compte rendu.
-- **Copier le lien** : l'adresse contient tout l'état (`#page=accueil&w=1366&v=…&choix=palette:charte.sous-menus:pastel`).
-- **Réinitialiser** : revenir à la Proposition, sans choix.
+**Choix par défaut** défait tous les choix. Une fois les réponses retenues en réunion, il suffit
+donc de copier les fichiers modifiés (éditeur, **Copier**) dans `custom-af-content/` ou AlumnForce.
 
 `preview/choix.yaml` décrit les questions et leurs réponses ; la première réponse de chaque
-question est la proposition actuelle (`custom-af-content/`). Une réponse peut :
-- ajouter un fichier CSS de `preview/choix/` juste après `custom.css` (palettes : variables
-  `--menu_…` ; options : règles qui remplacent celles de `custom.css`) ;
+question est la proposition actuelle (`custom-af-content/`, sans modification). Une réponse peut :
+- ajouter un fichier CSS de `preview/choix/` à `custom.css` (palettes : variables `--menu_…` ;
+  options : règles qui remplacent celles de `custom.css`) ;
 - modifier le menu : `remplacer` le sous-menu d'une catégorie, `renommer` ou `retirer` des
   entrées, désignées par leur chemin (`"Être ensemble > Méditons ensemble"`) ;
 - modifier l'accueil : `ajouter` un widget « html libre » (fichier de `preview/choix/`, avant ou
   après un widget existant), `remplacer` le contenu d'un widget, `retirer` un widget (ex. le slider).
 
-Les réponses de plusieurs questions se combinent, dans l'ordre du fichier. Une clé `groupe`
-regroupe les questions sous un titre dans le panneau. Le format complet est rappelé en tête de
-`preview/choix.yaml`.
+Une clé `groupe` regroupe les questions sous un titre dans le panneau. Le format complet est
+rappelé en tête de `preview/choix.yaml`.
 
-Une réponse retenue en réunion s'intègre ensuite dans `custom-af-content/` (CSS dans
-`custom.css`, menu dans `menus.yaml`) et devient la première réponse de sa question :
-en production, seul `custom-af-content/` compte.
+Après une modification des scripts ou du style de la visionneuse (`preview/*.js`,
+`preview/viewer.css`), augmenter le numéro `?r=` dans `index.html` et `preview.html` : les
+navigateurs rechargent alors les nouveaux fichiers au lieu de mélanger anciens et nouveaux.
 
 ## Fidélité du rendu
 
