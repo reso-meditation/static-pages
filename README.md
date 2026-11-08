@@ -184,8 +184,12 @@ choix et des fichiers modifiés, avec le lien, pour un compte rendu.
 
 **✎ Éditer** ouvre à gauche un éditeur (CodeMirror) avec un onglet par fichier de
 `custom-af-content/` : ceux de la page affichée d'abord, puis `custom.css`, `menus.yaml`, etc.
-Un point signale un fichier modifié par rapport au dépôt. Les modifications font partie du
-brouillon de la version affichée et s'affichent en direct.
+Les modifications font partie du brouillon de la version affichée et s'affichent en direct.
+Une **pastille** sur un onglet signale une modification non enregistrée (différente de la
+version enregistrée ; pour la Proposition, du dépôt). Après « Enregistrer », plus aucune pastille.
+
+Quand un choix modifie un fichier ouvert, seules les lignes concernées changent : la position de
+défilement, le curseur et l'historique d'annulation (Ctrl+Z) restent en place.
 
 - **Copier** : le fichier en entier, à coller dans AlumnForce ou dans `custom-af-content/` ;
 - **Différences** : les lignes changées par rapport au dépôt ;

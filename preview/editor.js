@@ -29,6 +29,43 @@
   function name(path) { return path.slice(CONTENT.length); }
   function isModified(path) { return typeof draft.files[path] === 'string'; }
   function textOf(path) { return isModified(path) ? draft.files[path] : base[path]; }
+  // Différent de la version enregistrée (pour la Proposition : du dépôt)
+  function isUnsaved(path) {
+    var saved = T.savedText(path);
+    if (saved === undefined) saved = base[path];
+    var cur = textOf(path);
+    return (cur === undefined ? null : cur) !== (saved === undefined ? null : saved);
+  }
+  // Remplace le texte d'un document en ne touchant qu'aux lignes qui changent : le défilement,
+  // le curseur et l'historique d'annulation restent en place.
+  function setText(doc, text) {
+    var old = doc.getValue();
+    if (old === text) return;
+    // zones changées (lignes de l'ancien texte retirées, lignes ajoutées), de la fin vers le début
+    var hunks = [], cur = null, line = 0;
+    T.diffOps(old, text).forEach(function (o) {
+      if (o[0] === ' ') { cur = null; line++; return; }
+      if (!cur) { cur = { at: line, del: 0, ins: [] }; hunks.push(cur); }
+      if (o[0] === '-') { cur.del++; line++; } else cur.ins.push(o[1]);
+    });
+    var n = old.split('\n').length;
+    building = true;
+    doc.cm ? doc.cm.operation(apply) : apply();
+    building = false;
+    function apply() {
+      for (var k = hunks.length - 1; k >= 0; k--) {
+        var h = hunks[k];
+        if (h.at + h.del < n) {   // la zone est suivie d'une ligne gardée : on remplace des lignes entières
+          doc.replaceRange(h.ins.length ? h.ins.join('\n') + '\n' : '', { line: h.at, ch: 0 }, { line: h.at + h.del, ch: 0 }, '+choix');
+        } else if (h.at > 0) {    // zone en fin de document : on part de la fin de la ligne précédente
+          var prev = h.at - 1;
+          doc.replaceRange(h.ins.length ? '\n' + h.ins.join('\n') : '', { line: prev, ch: doc.getLine(prev).length },
+            { line: n - 1, ch: doc.getLine(n - 1).length }, '+choix');
+        } else doc.setValue(text);
+      }
+    }
+  }
+
 
   function loadBase(path) {
     if (path in base) return Promise.resolve(base[path]);
@@ -78,9 +115,11 @@
         b.setAttribute('role', 'tab');
         b.setAttribute('aria-selected', String(path === current));
         b.textContent = name(path);
-        if (isModified(path)) b.classList.add('modified');
+        // pastille : modification non enregistrée
+        var unsaved = isUnsaved(path);
+        if (unsaved) b.classList.add('modified');
         if (base[path] === null) b.classList.add('new');
-        b.title = path + (isModified(path) ? ' (modifié)' : '') + (base[path] === null ? ' (absent du dépôt)' : '');
+        b.title = path + (unsaved ? ' · modification non enregistrée' : '') + (base[path] === null ? ' · absent du dépôt' : '');
         b.addEventListener('click', function () { openFile(path); });
         box.appendChild(b);
       });
@@ -320,14 +359,14 @@
   window.addEventListener('travail-change', function (e) {
     // accueil.yaml modifié : la liste des widgets (onglets) peut changer ; fichiers modifiés hors éditeur
     if (e.detail && e.detail.externe) return reloadDocs();
-    if (e.detail && e.detail.path && /accueil\.yaml$/.test(e.detail.path)) renderTabs();
+    if (e.detail && (e.detail.versions || (e.detail.path && /accueil\.yaml$/.test(e.detail.path)))) renderTabs();   // enregistrement : pastilles
   });
   // Autre version ouverte (ou modifiée dans un autre onglet) : l'éditeur montre ses fichiers
   function reloadDocs() {
     Object.keys(docs).forEach(function (p) {
       var t = textOf(p);
       if (t === null || t === undefined) { delete docs[p]; return; }
-      if (docs[p].getValue() !== t) { building = true; docs[p].setValue(t); building = false; }
+      setText(docs[p], t);
     });
     if (!ui.open || !cm) return;
     if (current && !docs[current]) { current = null; openFile(CONTENT + 'custom.css'); }

@@ -69,6 +69,11 @@
   function isDirty() { return content(travail) !== content(stored(travail.nom)); }
   // Une version (null : Proposition) a un brouillon non enregistré
   function hasDraft(nom) { return nom === travail.nom ? isDirty() : !!drafts[key(nom)]; }
+  // Texte d'un fichier dans la version enregistrée (undefined : celui du dépôt)
+  function savedText(path) {
+    var v = stored(travail.nom);
+    return typeof v.files[path] === 'string' ? v.files[path] : undefined;
+  }
   // La version regardée peut recevoir le brouillon (Enregistrer) : une version enregistrée
   function isEditable() { return !!(travail.nom && versions[travail.nom]); }
 
@@ -357,6 +362,7 @@
     isDirty: isDirty,
     isEditable: isEditable,
     hasDraft: hasDraft,
+    savedText: savedText,
     discard: discard,
     add: add,
     isEmpty: isEmpty,
