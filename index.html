@@ -8,7 +8,7 @@
   <!-- CodeMirror (éditeur des fichiers) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css">
-  <link rel="stylesheet" href="preview/viewer.css?r=5">
+  <link rel="stylesheet" href="preview/viewer.css?r=6">
 </head>
 <body>
   <aside id="editor" class="editor" aria-label="Éditer les fichiers" hidden>
@@ -31,35 +31,45 @@
   <div id="editor-resizer" class="editor-resizer" role="separator" aria-orientation="vertical" title="Glisser pour redimensionner" hidden></div>
 
   <section class="workspace">
+    <!-- Barre principale : la version affichée, comment la modifier, l'enregistrer, la partager -->
     <div class="toolbar">
-      <div class="title">
-        <strong class="brand">Pages Reso</strong>
-        <select id="page-select" class="page-select" aria-label="Page affichée"></select>
-        <span id="page-type" class="tag"></span>
-      </div>
-      <div class="controls">
-        <div class="segmented" role="group" aria-label="Largeur d'écran" id="widths">
-          <button type="button" data-w="1366">Bureau</button>
-          <button type="button" data-w="1024">Portable</button>
-          <button type="button" data-w="768">Tablette</button>
-          <button type="button" data-w="390">Mobile</button>
-        </div>
-        <button type="button" id="toggle-panel" class="btn" aria-pressed="true" aria-controls="panel">⚙ Choix</button>
-        <a id="open-live" class="btn" target="_blank" rel="noopener">Voir sur reso.co</a>
-      </div>
-    </div>
-    <!-- Version affichée : choix de la version, édition, enregistrement, et son état -->
-    <div id="draft-bar" class="draft-bar">
       <div class="version-bar" role="group" aria-label="Version">
+        <strong class="brand">Pages Reso</strong>
         <label for="version-select" class="version-label">Version</label>
         <select id="version-select" class="page-select" title="Version affichée : Production et Proposition (lecture seule), ou une de vos versions"></select>
-        <button type="button" id="toggle-editor" class="btn" aria-pressed="false" aria-controls="editor">✎ Éditer</button>
-        <button type="button" id="version-save" class="btn primary">Enregistrer</button>
-        <button type="button" id="version-saveas" class="btn" title="Enregistrer ce qui est affiché dans une nouvelle version">Enregistrer sous…</button>
-        <button type="button" id="version-discard" class="btn" title="Abandonner le brouillon : revenir à la version enregistrée">Annuler les modifications</button>
-        <button type="button" id="version-more" class="btn" title="Mes versions : ouvrir, renommer, supprimer">Mes versions</button>
+        <span class="tool-group" role="group" aria-label="Modifier la version">
+          <button type="button" id="toggle-editor" class="btn" aria-pressed="false" aria-controls="editor">✎ Éditer</button>
+          <button type="button" id="toggle-panel" class="btn" aria-pressed="true" aria-controls="panel" title="Choix à trancher : chaque réponse modifie les fichiers de la version">⚙ Choix</button>
+        </span>
+        <span class="tool-group" role="group" aria-label="Enregistrer la version">
+          <button type="button" id="version-save" class="btn primary">Enregistrer</button>
+          <button type="button" id="version-saveas" class="btn" title="Enregistrer ce qui est affiché dans une nouvelle version">Enregistrer sous…</button>
+          <button type="button" id="version-discard" class="btn" title="Abandonner le brouillon : revenir à la version enregistrée">Annuler les modifications</button>
+          <button type="button" id="version-more" class="btn" title="Mes versions : ouvrir, renommer, supprimer">Mes versions</button>
+          <details id="share" class="menu-btn">
+            <summary class="btn" title="Partager la version affichée, brouillon compris">Partager ▾</summary>
+            <div class="menu">
+              <button type="button" id="copy-link" title="Lien qui contient toute la version affichée : choix et fichiers modifiés">Copier le lien de partage</button>
+              <button type="button" id="copy-summary" title="Liste des choix et lien de partage, à coller dans un compte rendu">Copier le résumé</button>
+            </div>
+          </details>
+        </span>
       </div>
-      <span id="draft-text" role="status"></span>
+    </div>
+    <!-- État de la version (jaune : brouillon non enregistré) -->
+    <div id="draft-bar" class="draft-bar"><span id="draft-text" role="status"></span></div>
+    <!-- Affichage : ce qu'on regarde, sans rien modifier -->
+    <div class="view-bar" role="group" aria-label="Affichage">
+      <label for="page-select" class="view-label">Page</label>
+      <select id="page-select" class="page-select small"></select>
+      <span id="page-type" class="tag"></span>
+      <div class="segmented" role="group" aria-label="Largeur d'écran" id="widths">
+        <button type="button" data-w="1366">Bureau</button>
+        <button type="button" data-w="1024">Portable</button>
+        <button type="button" data-w="768">Tablette</button>
+        <button type="button" data-w="390">Mobile</button>
+      </div>
+      <a id="open-live" class="link-btn view-live" target="_blank" rel="noopener">Voir sur reso.co ↗</a>
     </div>
     <div id="warnings" class="warnings" hidden></div>
     <div id="stage" class="stage"></div>
@@ -72,8 +82,6 @@
     </div>
     <div id="choices" class="choices"></div>
     <div class="panel-actions">
-      <button type="button" id="copy-link" class="btn primary" title="Lien qui contient toute la version affichée : choix et fichiers modifiés">Copier le lien de partage</button>
-      <button type="button" id="copy-summary" class="btn" title="Liste des choix et lien de partage, à coller dans un compte rendu">Copier le résumé</button>
       <button type="button" id="reset" class="link-btn" title="Défaire tous les choix (leurs modifications sont retirées des fichiers)">Choix par défaut</button>
     </div>
   </aside>
@@ -121,9 +129,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/jump-to-line.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
-  <script src="preview/choix-fichiers.js?r=5"></script>
-  <script src="preview/versions.js?r=5"></script>
-  <script src="preview/editor.js?r=5"></script>
-  <script src="preview/viewer.js?r=5"></script>
+  <script src="preview/choix-fichiers.js?r=6"></script>
+  <script src="preview/versions.js?r=6"></script>
+  <script src="preview/editor.js?r=6"></script>
+  <script src="preview/viewer.js?r=6"></script>
 </body>
 </html>

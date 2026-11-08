@@ -137,12 +137,16 @@ La visionneuse permet de :
 qu'on ouvre dans l'éditeur et qu'on copiera dans AlumnForce : les choix eux-mêmes s'écrivent dans
 les fichiers (voir « Choisir » plus bas).
 
-Tout ce qui concerne la version est regroupé dans la barre sous la barre d'outils :
-**Version** (menu), **✎ Éditer**, **Enregistrer**, **Enregistrer sous…**, **Annuler les
-modifications**, **Mes versions**, et une ligne qui dit où on en est.
+La visionneuse a deux barres :
+- en haut, la **version** : le menu **Version** ; les deux façons de la modifier, **✎ Éditer**
+  (panneau de gauche) et **⚙ Choix** (panneau de droite) ; **Enregistrer**, **Enregistrer
+  sous…**, **Annuler les modifications**, **Mes versions**, **Partager** ; puis une ligne qui dit
+  où on en est (jaune s'il y a un brouillon) ;
+- en dessous, l'**affichage**, qui ne modifie rien : la page, la largeur d'écran, « Voir sur
+  reso.co ».
 
 On regarde toujours **une version** :
-- **Production** : ce qui est en ligne (capture), en lecture seule, sans choix ni éditeur ;
+- **Production** : ce qui est en ligne (capture), en lecture seule (ni éditeur ni choix) ;
 - **Proposition (dépôt)** : `custom-af-content/` tel quel, en lecture seule ;
 - **Mes versions** : enregistrées dans ce navigateur, modifiables.
 
@@ -164,7 +168,7 @@ partagent les mêmes brouillons.
 
 ### Partager une version
 
-**Copier le lien de partage** (panneau Choix) donne une adresse qui contient toute la version
+**Partager → Copier le lien de partage** donne une adresse qui contient toute la version
 affichée, brouillon compris : son nom, ses choix et ses fichiers modifiés, compressés
 (`#page=accueil&w=1366&partage=…`). Un fichier modifié y figure comme liste de différences avec le
 dépôt quand c'est possible (le lien indique le commit de départ, et le fichier d'origine est repris
@@ -173,7 +177,7 @@ millier de caractères ; des fichiers entièrement réécrits, quelques dizaines
 navigateurs l'acceptent, certaines messageries le coupent).
 
 Ouvrir un lien de partage **ajoute** la version à « Mes versions » (« Reçu : … ») et l'affiche ;
-rien de ce qu'on avait n'est écrasé, brouillons compris. **Copier le résumé** donne la liste des
+rien de ce qu'on avait n'est écrasé, brouillons compris. **Partager → Copier le résumé** donne la liste des
 choix et des fichiers modifiés, avec le lien, pour un compte rendu.
 
 ### Éditer dans le navigateur

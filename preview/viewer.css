@@ -32,8 +32,7 @@ body {
   background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
-.title { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.title .brand { color: var(--purple); font-size: 15px; white-space: nowrap; padding-right: 10px; border-right: 1px solid var(--line); }
+.brand { color: var(--purple); font-size: 15px; white-space: nowrap; padding-right: 12px; margin-right: 2px; border-right: 1px solid var(--line); }
 .page-select {
   max-width: 100%;
   padding: 5px 30px 5px 10px;
@@ -45,10 +44,53 @@ body {
   appearance: none;
   cursor: pointer;
 }
+.page-select.small { font-size: 14px; font-weight: 500; padding: 4px 28px 4px 8px; }
 .page-select:hover { border-color: #c9c5bb; }
 .page-select:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
 .tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: #f1efe9; color: var(--muted); white-space: nowrap; }
-.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+/* Barre d'affichage : page, largeur (ne modifie rien) */
+.view-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 6px 16px;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.view-label { color: var(--muted); }
+.view-bar .segmented button { padding: 4px 9px; font-size: 13px; }
+.view-live { margin-left: auto; font-size: 13px; }
+
+/* Menu « Partager » */
+.menu-btn { position: relative; }
+.menu-btn > summary { list-style: none; display: inline-block; }
+.menu-btn > summary::-webkit-details-marker { display: none; }
+.menu-btn .menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  min-width: 220px;
+  padding: 4px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.14);
+}
+.menu-btn .menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-btn .menu button:hover, .menu-btn .menu button:focus-visible { background: #f6f5f1; }
 
 .segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .segmented button {
@@ -184,7 +226,7 @@ body.resizing iframe { pointer-events: none; }
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 14px;
-  padding: 8px 16px;
+  padding: 5px 16px;
   font-size: 13px;
   background: #f4f7f1;
   color: #2f4a26;
@@ -194,14 +236,15 @@ body.resizing iframe { pointer-events: none; }
 .draft-bar.dirty { background: var(--warn-bg); color: var(--warn-ink); border-bottom-color: #f0dc9c; }
 .draft-bar.dirty #draft-text::before { content: "● "; color: #d08a00; }
 #draft-text { flex: 1 1 280px; }
-.version-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
-.version-bar .page-select { max-width: 260px; }
+.version-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.version-bar .page-select { max-width: 280px; }
+.tool-group { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-left: 10px; border-left: 1px solid var(--line); }
 .version-bar .btn { padding: 5px 10px; }
 .version-bar .btn:disabled { opacity: .4; }
 .version-label { font-weight: 600; font-size: 13px; color: var(--ink); }
 
 /* Production : lecture seule, pas d'éditeur */
-body.mode-production .editor, body.mode-production .editor-resizer { display: none; }
+body.mode-production .editor, body.mode-production .editor-resizer, body.mode-production .panel { display: none; }
 
 /* Boîtes de dialogue : question, versions enregistrées */
 .ask-dialog, .versions-dialog {
@@ -301,4 +344,11 @@ body.panel-closed .panel { display: none; }
   .panel { width: auto; max-height: 45vh; border-left: 0; border-top: 1px solid var(--line); }
   .stage { padding: 8px; }
   #page-type { display: none; }
+  .brand, .version-label, .view-label, .draft-bar { display: none; }
+  .toolbar { padding: 8px; }
+  .version-bar { gap: 6px; }
+  .version-bar .page-select { flex: 1 1 100%; max-width: none; }
+  .tool-group { padding-left: 0; border-left: 0; }
+  .version-bar .btn, .menu-btn > summary.btn { padding: 4px 8px; font-size: 13px; }
+  .view-bar { padding: 6px 8px; }
 }

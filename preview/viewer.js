@@ -162,6 +162,8 @@
       : dirty ? 'Enregistrer le brouillon dans « ' + nom + ' » (Ctrl+S dans l\'éditeur)' : 'Rien à enregistrer';
     $('version-saveas').disabled = prod;
     $('version-discard').disabled = prod || !dirty;
+    $('toggle-panel').disabled = prod;
+    $('toggle-panel').title = prod ? 'La Production est en lecture seule' : 'Choix à trancher : chaque réponse modifie les fichiers de la version';
     bar.className = 'draft-bar';
     if (prod) {
       bar.classList.add('readonly');
@@ -561,8 +563,12 @@
     saveCurrent(false).then(update);
   });
   $('reset').addEventListener('click', resetChoices);
-  $('copy-link').addEventListener('click', function () { copyText(shareLink(), 'Lien de partage'); });
-  $('copy-summary').addEventListener('click', function () { copyText(summary(), 'Résumé'); });
+  // Menu « Partager » : se ferme après un choix, un clic ailleurs ou Échap
+  function closeShare() { $('share').open = false; }
+  $('copy-link').addEventListener('click', function () { closeShare(); copyText(shareLink(), 'Lien de partage'); });
+  $('copy-summary').addEventListener('click', function () { closeShare(); copyText(summary(), 'Résumé'); });
+  document.addEventListener('click', function (e) { if (!$('share').contains(e.target)) closeShare(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeShare(); });
   // Version demandée par l'adresse (rechargement, lien vers une version enregistrée, lien de partage)
   function fromHash() {
     var h = readHash();
