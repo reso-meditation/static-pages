@@ -36,8 +36,8 @@ La liste des widgets du tableau de bord, dans l'ordre, slider compris :
   sa capture sur reso.co (`preview/site/widgets/<nom>.<largeur>.html`). Les noms disponibles et
   l'ordre actuel sur le site sont dans `preview/site/widgets/widgets.json`. Le slider est toujours
   en tête : sur reso.co, AlumnForce le place au-dessus des autres widgets.
-- `html: <fichier>.html` : widget « html libre », fichier de ce dossier. `titre` (facultatif) est le
-  nom affiché sur son bouton de copie dans la visionneuse.
+- `html: <fichier>.html` : widget « html libre », fichier de ce dossier. `titre` (facultatif) le
+  décrit (commentaire).
 
 Pour essayer un nouvel agencement, réordonner la liste ou y insérer des widgets « html libre ».
 
@@ -125,10 +125,10 @@ La visionneuse permet de :
   « Accueil » pour l'accueil, « Timer » pour le minuteur ; voir `url` et `liens` dans
   `preview/pages.yaml`) reste dans l'aperçu, tout autre lien ouvre reso.co dans un nouvel onglet ;
 - choisir la largeur d'écran (bureau, portable, tablette, mobile) ;
-- comparer la **Proposition** (`custom-af-content/`) et la **Production** (ce qui est en ligne) ;
+- choisir la **version** : **Proposition** (`custom-af-content/`), **Brouillon** (vos modifications,
+  voir plus bas) ou **Production** (ce qui est en ligne) ;
 - **éditer** les fichiers de `custom-af-content/` dans le navigateur (brouillon, voir plus bas) ;
 - essayer les **choix** de `preview/choix.yaml` (panneau « Choix ») ;
-- copier le contenu à coller dans AlumnForce (`custom.css`, un bouton par widget « html libre ») ;
 - voir les avertissements (JavaScript, `<style>`, `<iframe>` sur l'accueil, widget inconnu,
   erreur dans un fichier YAML…).
 
@@ -140,8 +140,8 @@ Un point signale un fichier modifié. Les modifications forment un **brouillon**
 
 - jamais écrit dans le dépôt : il est gardé dans ce navigateur (`localStorage`), et revient
   après un rechargement ; il n'est pas visible des autres (un lien partagé montre la Proposition) ;
-- affiché en direct dans la version **Brouillon** (choisie automatiquement pour A à l'ouverture
-  de l'éditeur), utilisable dans les comparaisons et avec les choix ;
+- affiché en direct dans la version **Brouillon** (choisie automatiquement à l'ouverture de
+  l'éditeur), avec les choix ;
 - **Copier** : le fichier modifié en entier ; **Différences** : les lignes changées par rapport au
   dépôt ; **Rétablir** : revenir au fichier du dépôt ; **Nouveau fichier** : par exemple
   `html-widget6.html`, à ajouter ensuite dans `accueil.yaml` ; **Abandonner le brouillon** : tout
@@ -150,16 +150,14 @@ Un point signale un fichier modifié. Les modifications forment un **brouillon**
 Pour garder une modification, copier le fichier dans `custom-af-content/` (ou le transmettre)
 et commiter. Si le fichier du dépôt change pendant qu'un brouillon le modifie, l'éditeur le signale.
 
-### Comparer et choisir (réunions)
+### Choisir (réunions)
 
-Deux réglages, **A** et **B**, chacun composé d'une version (Proposition, Brouillon ou Production)
-et, sauf pour la Production, d'une réponse à chaque choix. Par défaut : A = Proposition, B = Production.
+Le panneau **Choix** donne la version affichée et, sauf pour la Production, une réponse à chaque
+question de `preview/choix.yaml`, regroupées sous des titres.
 
-- **◧ Comparer** (touche `C`) : A et B côte à côte, défilement synchronisé.
-- **⇄ Basculer** (touche `B`) : échange A et B ; seul, c'est un « avant / après » instantané.
-- **Panneau Choix** : une colonne de boutons par réglage (A, B en mode comparaison).
-- **Copier le résumé** : la liste des choix de A (et B), avec le lien, pour un compte rendu.
-- **Copier le lien** : l'adresse contient tout l'état (`#page=…&a=proposition~palette:charte.sous-menus:pastel&b=…`).
+- **Copier le résumé** : la liste des choix retenus, avec le lien, pour un compte rendu.
+- **Copier le lien** : l'adresse contient tout l'état (`#page=accueil&w=1366&v=…&choix=palette:charte.sous-menus:pastel`).
+- **Réinitialiser** : revenir à la Proposition, sans choix.
 
 `preview/choix.yaml` décrit les questions et leurs réponses ; la première réponse de chaque
 question est la proposition actuelle (`custom-af-content/`). Une réponse peut :
@@ -233,8 +231,8 @@ le script retire de l'en-tête les entrées réservées aux visiteurs, listées 
 1. Modifier un fichier de `custom-af-content/`, et vérifier dans l'aperçu.
 2. Commiter et pousser.
 3. Reporter dans AlumnForce, formulaire par formulaire : coller les fichiers `.html` et
-   `custom.css` (boutons « Copier » de la visionneuse ; dans l'éditeur de texte, passer en mode
-   code `</>` avant de coller), et reproduire `accueil.yaml` et `menus.yaml` dans la
-   configuration du tableau de bord et du menu.
+   `custom.css` (bouton « Copier » de l'éditeur de la visionneuse ; dans l'éditeur de texte
+   d'AlumnForce, passer en mode code `</>` avant de coller), et reproduire `accueil.yaml` et
+   `menus.yaml` dans la configuration du tableau de bord et du menu.
 
 `custom.css` touche **tout le site** : après une modification, vérifier les autres pages de l'aperçu.

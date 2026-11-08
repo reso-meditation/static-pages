@@ -84,7 +84,7 @@
   }
 
   function notify(payload) {
-    if (window.parent !== window) window.parent.postMessage(Object.assign({ source: 'reso-preview', page: pageId, cote: params.get('cote') || 'a' }, payload), '*');
+    if (window.parent !== window) window.parent.postMessage(Object.assign({ source: 'reso-preview', page: pageId }, payload), '*');
   }
 
   function fetchText(path) {
@@ -657,13 +657,6 @@
     if (!d || d.source !== 'reso-viewer' || d.type !== 'brouillon' || VERSION !== 'brouillon' || !currentEntry) return;
     load(currentEntry).catch(function (err) { showError(err.message); });
     loadMenu();
-  });
-
-  // Raccourcis de la visionneuse (C : comparer, B : basculer), aussi quand l'aperçu a le focus
-  document.addEventListener('keydown', function (e) {
-    if (window.parent === window || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
-    if (/^[cCbB]$/.test(e.key)) notify({ key: e.key.toLowerCase() });
   });
 
   if (!pageId) return showError('Paramètre ?page= manquant.');
